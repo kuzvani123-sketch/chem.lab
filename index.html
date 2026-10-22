@@ -1,13 +1,3 @@
-Я понял вас. Прошу прощения за то, что в предыдущих версиях код мог обрезаться или ломаться из-за оптимизации. Вы абсолютно правы: **лучше дать полный, огромный код, но рабочий на 100%**, чем экономить символы и ломать логику.
-
-Я исправил проблему с таблицей Менделеева. Теперь:
-1. **Все 118 элементов на месте**, включая лантаноиды и актиноиды.
-2. Левый край (щелочные металлы) больше не уезжает за экран. Если экран ноутбука узкий, под таблицей появится **горизонтальная полоса прокрутки**.
-3. Вся химическая логика (реакции, бюретка, индикаторы, звуки, pH-метр) сохранена полностью.
-
-Вот полный, ничем не обрезанный код. Скопируйте его целиком и замените в файле `index.html`:
-
-```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -26,31 +16,18 @@ body{
   color:#e6edf3;
   font-size:14px;
   user-select:none;
-  overflow-y: scroll; /* Чтобы страница не прыгала при появлении скролла */
+  overflow-y: scroll;
 }
 .app{max-width:1600px;margin:0 auto;padding:20px;width:100%}
 h1{font-size:22px;font-weight:800;margin:0 0 8px;letter-spacing:-0.5px;display:flex;align-items:center;gap:10px}
 .hint{font-size:13px;color:#8b949e;margin-bottom:16px}
 
 /* ================= ТАБЛИЦА МЕНДЕЛЕЕВА ================= */
-.ptable-container {
-  width: 100%;
-  overflow-x: auto; /* Появление скролла при нехватке места */
-  padding-bottom: 15px;
-  margin-bottom: 10px;
-}
-.glbl{
-  display:grid;grid-template-columns:repeat(18,minmax(0,1fr));gap:3px;
-  margin-bottom:6px;font-size:10px;opacity:.4;text-align:center;font-weight:600;
-  min-width: 900px;
-}
-.ptable{
-  display:grid;grid-template-columns:repeat(18,minmax(0,1fr));gap:3px;
-  min-width: 900px; /* Минимальная ширина, чтобы элементы не сжимались */
-}
+.ptable-container { width: 100%; overflow-x: auto; padding-bottom: 15px; margin-bottom: 10px; }
+.glbl{ display:grid;grid-template-columns:repeat(18,minmax(0,1fr));gap:3px; margin-bottom:6px;font-size:10px;opacity:.4;text-align:center;font-weight:600; min-width: 900px; }
+.ptable{ display:grid;grid-template-columns:repeat(18,minmax(0,1fr));gap:3px; min-width: 900px; }
 .el{
-  height: 52px;
-  background:#1c2128;border-radius:4px;padding:3px;cursor:grab;
+  height: 52px; background:#1c2128;border-radius:4px;padding:3px;cursor:grab;
   display:flex;flex-direction:column;justify-content:space-between;font-size:10px;
   border:1px solid rgba(255,255,255,0.05);transition:all .2s cubic-bezier(0.4, 0, 0.2, 1);
   position:relative;overflow:hidden;
@@ -62,33 +39,17 @@ h1{font-size:22px;font-weight:800;margin:0 0 8px;letter-spacing:-0.5px;display:f
 .el .sy{font-weight:800;font-size:15px;text-align:center;line-height:1;letter-spacing:-0.5px;margin-top:2px}
 .el .nm{font-size:7px;opacity:.5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;font-weight:600}
 .el.sel{border-color:#f0883e;box-shadow:0 0 0 2px rgba(240,136,62,0.3) inset, 0 0 15px rgba(240,136,62,0.3)}
-.c-alkali{background:linear-gradient(135deg,#5c1c1c,#7a2e2e)}
-.c-alkaline{background:linear-gradient(135deg,#5c421c,#7a5a2e)}
-.c-transition{background:linear-gradient(135deg,#3d301c,#4a3f2e)}
-.c-post{background:linear-gradient(135deg,#1c3d2e,#2e4a3f)}
-.c-metalloid{background:linear-gradient(135deg,#1c3d3d,#2e4a4a)}
-.c-nonmetal{background:linear-gradient(135deg,#1c2e3d,#2e3f4a)}
-.c-halogen{background:linear-gradient(135deg,#1c3d4a,#2e4a5e)}
-.c-noble{background:linear-gradient(135deg,#2e1c3d,#3f2e4a)}
-.c-lanth{background:linear-gradient(135deg,#3d1c2e,#4a2e3f)}
-.c-act{background:linear-gradient(135deg,#4a1c3d,#5c2e4a)}
-
-/* Метки для лантаноидов и актиноидов */
-.lanth-placeholder, .act-placeholder {
-  background: transparent;
-  border: 2px dashed #4a2e3f;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 10px; color: #8b949e; cursor: default;
-}
-.lanth-placeholder:hover, .act-placeholder:hover {
-  transform: none; box-shadow: none; border-color: #4a2e3f;
-}
+.c-alkali{background:linear-gradient(135deg,#5c1c1c,#7a2e2e)}.c-alkaline{background:linear-gradient(135deg,#5c421c,#7a5a2e)}
+.c-transition{background:linear-gradient(135deg,#3d301c,#4a3f2e)}.c-post{background:linear-gradient(135deg,#1c3d2e,#2e4a3f)}
+.c-metalloid{background:linear-gradient(135deg,#1c3d3d,#2e4a4a)}.c-nonmetal{background:linear-gradient(135deg,#1c2e3d,#2e3f4a)}
+.c-halogen{background:linear-gradient(135deg,#1c3d4a,#2e4a5e)}.c-noble{background:linear-gradient(135deg,#2e1c3d,#3f2e4a)}
+.c-lanth{background:linear-gradient(135deg,#3d1c2e,#4a2e3f)}.c-act{background:linear-gradient(135deg,#4a1c3d,#5c2e4a)}
+.lanth-placeholder, .act-placeholder { background: transparent; border: 2px dashed #4a2e3f; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #8b949e; cursor: default; }
+.lanth-placeholder:hover, .act-placeholder:hover { transform: none; box-shadow: none; border-color: #4a2e3f; }
 
 /* ================= РАБОЧАЯ ОБЛАСТЬ ================= */
 .workspace{display:grid;grid-template-columns:380px 1fr;gap:20px}
-@media (max-width: 1050px) { 
-  .workspace { grid-template-columns: 1fr; } 
-}
+@media (max-width: 1050px) { .workspace { grid-template-columns: 1fr; } }
 
 /* ================= СЛОТЫ РЕАГЕНТОВ ================= */
 .slot{
@@ -124,7 +85,6 @@ button{
 .btn-tool:hover{background:linear-gradient(135deg, #388bfd, #58a6ff);transform:translateY(-2px)}
 .btn-tool.danger{background:linear-gradient(135deg, #da3633, #f85149);box-shadow:0 4px 15px rgba(218,54,51,0.3)}
 .btn-tool.danger:hover{background:linear-gradient(135deg, #f85149, #ff7b72)}
-.btn-tool:disabled{opacity:0.5;cursor:not-allowed;transform:none}
 
 input[type=text]{width:100%;padding:12px;border-radius:10px;background:#0d1117;color:#e6edf3;border:1px solid #30363d;font-size:14px;margin-top:12px;transition:border-color 0.2s;font-family:inherit}
 input[type=text]:focus{outline:none;border-color:#58a6ff;box-shadow:0 0 0 3px rgba(88,166,255,0.2)}
@@ -134,47 +94,21 @@ select:focus{outline:none;border-color:#58a6ff}
 
 /* ================= СЦЕНА ================= */
 .lab-stage{
-  position:relative;height:550px;
-  background: #12151c;
-  border:1px solid #30363d;border-radius:16px;overflow:hidden;
+  position:relative;height:550px;background: #12151c;border:1px solid #30363d;border-radius:16px;overflow:hidden;
   display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
   margin-bottom:16px;box-shadow:inset 0 0 100px rgba(0,0,0,0.8);
 }
-.lab-stage::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;height:120px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0.6) 100%);
-  border-top: 1px solid rgba(255,255,255,0.1);
-  box-shadow: inset 0 20px 40px rgba(0,0,0,0.5);
-  z-index: 0;
-}
-.lab-stage::before{
-  content:'';position:absolute;inset:0;pointer-events:none;
-  background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-  background-size: 40px 40px;
-  mask-image: linear-gradient(180deg, transparent 0%, black 100%);
-  z-index: 0;
-}
+.lab-stage::after{content:'';position:absolute;bottom:0;left:0;right:0;height:120px;background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0.6) 100%);border-top: 1px solid rgba(255,255,255,0.1);box-shadow: inset 0 20px 40px rgba(0,0,0,0.5);z-index: 0;}
+.lab-stage::before{content:'';position:absolute;inset:0;pointer-events:none;background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);background-size: 40px 40px;mask-image: linear-gradient(180deg, transparent 0%, black 100%);z-index: 0;}
 
 .top-tools{position:absolute;top:16px;left:16px;display:flex;gap:10px;z-index:20;align-items:center}
-.stage-btn{
-  margin:0;padding:8px 14px;font-size:12px;background:rgba(33,38,45,0.8);color:#c9d1d9;
-  border:1px solid #30363d;backdrop-filter:blur(5px);border-radius:8px;
-}
+.stage-btn{margin:0;padding:8px 14px;font-size:12px;background:rgba(33,38,45,0.8);color:#c9d1d9;border:1px solid #30363d;backdrop-filter:blur(5px);border-radius:8px;}
 .stage-btn.active{background:rgba(137,87,229,0.2);border-color:#a371f7;color:#fff;box-shadow:0 0 15px rgba(137,87,229,0.3)}
 
-/* pH-метр */
-.ph-meter{
-  display:flex;align-items:center;background:rgba(13,17,23,0.8);backdrop-filter:blur(5px);
-  border:1px solid #30363d;border-radius:8px;padding:6px 12px;
-  font-family:monospace;font-size:14px;color:#8b949e;box-shadow:0 4px 12px rgba(0,0,0,0.3)
-}
+.ph-meter{display:flex;align-items:center;background:rgba(13,17,23,0.8);backdrop-filter:blur(5px);border:1px solid #30363d;border-radius:8px;padding:6px 12px;font-family:monospace;font-size:14px;color:#8b949e;box-shadow:0 4px 12px rgba(0,0,0,0.3)}
 .ph-val{font-weight:800;margin-left:8px;padding:2px 8px;border-radius:6px;background:#222;transition:background 0.5s, color 0.5s;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,0.5)}
 
-.heat-btn{
-  position:absolute;top:16px;right:16px;width:auto;padding:10px 16px;font-size:13px;
-  background:rgba(33,38,45,0.8);color:#c9d1d9;border:1px solid #30363d;border-radius:8px;
-  margin:0;z-index:10;transition:all .2s;backdrop-filter:blur(5px);
-}
+.heat-btn{position:absolute;top:16px;right:16px;width:auto;padding:10px 16px;font-size:13px;background:rgba(33,38,45,0.8);color:#c9d1d9;border:1px solid #30363d;border-radius:8px;margin:0;z-index:10;transition:all .2s;backdrop-filter:blur(5px);}
 .heat-btn:hover{background:rgba(48,54,61,0.9)}
 .heat-btn.on{background:rgba(122,46,31,0.8);border-color:#f0883e;color:#f0883e;box-shadow:0 0 20px rgba(240,136,62,0.4);text-shadow:0 0 8px rgba(240,136,62,0.5)}
 
@@ -182,12 +116,7 @@ select:focus{outline:none;border-color:#58a6ff}
 .burette-wrap{position:absolute;top:40px;left:50%;transform:translateX(-50%);display:none;flex-direction:column;align-items:center;z-index:5;transition:all 0.3s}
 .burette-wrap.active{display:flex;animation:dropIn 0.4s ease-out}
 @keyframes dropIn{from{transform:translate(-50%, -20px);opacity:0}to{transform:translate(-50%, 0);opacity:1}}
-.burette-tube{
-  width:28px;height:150px;background:linear-gradient(90deg, rgba(200,220,240,0.05), rgba(200,220,240,0.15), rgba(200,220,240,0.05));
-  border:2px solid rgba(200,220,240,0.3);border-radius:6px 6px 0 0;position:relative;
-  display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;
-  box-shadow: inset 0 0 15px rgba(255,255,255,0.05);
-}
+.burette-tube{width:28px;height:150px;background:linear-gradient(90deg, rgba(200,220,240,0.05), rgba(200,220,240,0.15), rgba(200,220,240,0.05));border:2px solid rgba(200,220,240,0.3);border-radius:6px 6px 0 0;position:relative;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;box-shadow: inset 0 0 15px rgba(255,255,255,0.05);}
 .burette-liquid{width:100%;height:80%;background:rgba(100,150,200,0.5);transition:height 0.5s cubic-bezier(0.4, 0, 0.2, 1)}
 .burette-marks{position:absolute;top:10px;left:2px;right:2px;height:100%;background:repeating-linear-gradient(0deg,transparent,transparent 20px,rgba(255,255,255,0.2) 20px,rgba(255,255,255,0.2) 21px)}
 .burette-valve{width:18px;height:18px;background:linear-gradient(135deg, #555, #222);border-radius:50%;margin-top:-4px;border:2px solid #111;z-index:2;cursor:pointer;transition:transform 0.1s;box-shadow:0 2px 5px rgba(0,0,0,0.5)}
@@ -203,46 +132,19 @@ select:focus{outline:none;border-color:#58a6ff}
 .beaker.shaking{animation:shakeBeaker .4s ease-in-out}
 @keyframes shakeBeaker{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(-8px) rotate(-3deg)}50%{transform:translateX(8px) rotate(3deg)}75%{transform:translateX(-5px) rotate(-2deg)}}
 .beaker-neck{position:absolute;top:-12px;left:50%;transform:translateX(-50%);width:70%;height:12px;border:2px solid rgba(200,220,240,0.3);border-bottom:none;border-radius:6px 6px 0 0;background:rgba(200,220,240,0.05)}
-.beaker-glass{
-  width:100%;height:100%;position:relative;
-  background:linear-gradient(180deg, rgba(200,220,240,0.05) 0%, rgba(200,220,240,0.12) 100%);
-  border:2px solid rgba(200,220,240,0.3);border-radius:4px 4px 20px 20px;overflow:hidden;
-  box-shadow: inset 0 0 30px rgba(200,220,240,0.05), 0 15px 35px rgba(0,0,0,0.5);
-  backdrop-filter: blur(2px);
-}
+.beaker-glass{width:100%;height:100%;position:relative;background:linear-gradient(180deg, rgba(200,220,240,0.05) 0%, rgba(200,220,240,0.12) 100%);border:2px solid rgba(200,220,240,0.3);border-radius:4px 4px 20px 20px;overflow:hidden;box-shadow: inset 0 0 30px rgba(200,220,240,0.05), 0 15px 35px rgba(0,0,0,0.5);backdrop-filter: blur(2px);}
 .beaker-glass::after{content:'';position:absolute;top:0;left:12px;width:10px;bottom:30px;background:linear-gradient(180deg,rgba(255,255,255,0.15),transparent);border-radius:50%;pointer-events:none;z-index:20}
 
 .flask{position:relative;width:180px;height:200px;display:none;margin-bottom:0}
 .flask.on{display:block}
-.flask-glass{
-  width:100%;height:100%;position:relative;
-  background:linear-gradient(180deg, rgba(200,220,240,0.05) 0%, rgba(200,220,240,0.12) 100%);
-  border:2px solid rgba(200,220,240,0.3);border-radius:15px 15px 60px 60px;overflow:hidden;
-  clip-path:polygon(35% 0, 65% 0, 100% 100%, 0% 100%);
-  box-shadow: inset 0 0 30px rgba(200,220,240,0.05), 0 15px 35px rgba(0,0,0,0.5);
-  backdrop-filter: blur(2px);
-}
+.flask-glass{width:100%;height:100%;position:relative;background:linear-gradient(180deg, rgba(200,220,240,0.05) 0%, rgba(200,220,240,0.12) 100%);border:2px solid rgba(200,220,240,0.3);border-radius:15px 15px 60px 60px;overflow:hidden;clip-path:polygon(35% 0, 65% 0, 100% 100%, 0% 100%);box-shadow: inset 0 0 30px rgba(200,220,240,0.05), 0 15px 35px rgba(0,0,0,0.5);backdrop-filter: blur(2px);}
 .flask-neck{position:absolute;top:-20px;left:50%;transform:translateX(-50%);width:35%;height:25px;border:2px solid rgba(200,220,240,0.3);border-bottom:none;background:transparent}
 .flask-glass::after{content:'';position:absolute;top:0;left:15%;width:8px;bottom:20%;background:linear-gradient(180deg,rgba(255,255,255,0.15),transparent);border-radius:50%;pointer-events:none;z-index:20;clip-path:polygon(0 0, 100% 0, 100% 100%, 0 100%)}
 
 /* ================= ЖИДКОСТЬ И ЭФФЕКТЫ ================= */
-.liquid{
-  position:absolute;bottom:0;left:0;right:0;height:0%;
-  background:linear-gradient(180deg, rgba(100,150,200,0.4), rgba(100,150,200,0.7));
-  transition:background 1s ease, height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index:1;
-}
-.liquid::before{
-  content:'';position:absolute;top:-2px;left:0;right:0;height:6px;
-  background:rgba(255,255,255,0.4);border-radius:50%;
-  filter:blur(1px);
-  animation:surfaceWave 3s ease-in-out infinite;
-}
-.liquid::after{
-  content:'';position:absolute;top:5px;left:10%;width:80%;height:20px;
-  background:linear-gradient(180deg, rgba(255,255,255,0.2), transparent);
-  border-radius:50%;
-}
+.liquid{position:absolute;bottom:0;left:0;right:0;height:0%;background:linear-gradient(180deg, rgba(100,150,200,0.4), rgba(100,150,200,0.7));transition:background 1s ease, height 0.8s cubic-bezier(0.4, 0, 0.2, 1);z-index:1;}
+.liquid::before{content:'';position:absolute;top:-2px;left:0;right:0;height:6px;background:rgba(255,255,255,0.4);border-radius:50%;filter:blur(1px);animation:surfaceWave 3s ease-in-out infinite;}
+.liquid::after{content:'';position:absolute;top:5px;left:10%;width:80%;height:20px;background:linear-gradient(180deg, rgba(255,255,255,0.2), transparent);border-radius:50%;}
 @keyframes surfaceWave{0%,100%{transform:scaleX(1) translateY(0)}50%{transform:scaleX(0.98) translateY(-2px)}}
 
 .solid-layer{position:absolute;bottom:0;left:0;right:0;height:60%;pointer-events:none;z-index:4}
@@ -257,13 +159,7 @@ select:focus{outline:none;border-color:#58a6ff}
 
 .bubbles-layer{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:5}
 .bubble{position:absolute;border-radius:50%;animation:bubbleRise linear forwards;box-shadow:inset 0 0 5px rgba(255,255,255,0.8), 0 0 10px currentColor}
-@keyframes bubbleRise{
-  0%{transform:translateY(0) scale(0.3);opacity:0}
-  10%{transform:translateY(-10px) scale(1);opacity:1}
-  50%{opacity:0.9}
-  90%{opacity:0.8}
-  100%{transform:translateY(-160px) scale(1.4);opacity:0}
-}
+@keyframes bubbleRise{0%{transform:translateY(0) scale(0.3);opacity:0}10%{transform:translateY(-10px) scale(1);opacity:1}50%{opacity:0.9}90%{opacity:0.8}100%{transform:translateY(-160px) scale(1.4);opacity:0}}
 
 .precip-layer{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:6}
 .precip-particle{position:absolute;border-radius:50%;animation:precipFall ease-in forwards;box-shadow:0 0 6px currentColor}
@@ -278,18 +174,8 @@ select:focus{outline:none;border-color:#58a6ff}
 .burner-wrap{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;z-index:2}
 .flame-glow{position:absolute;bottom:50px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,140,0,0.2),transparent 60%);opacity:0;transition:opacity 0.5s;pointer-events:none;filter:blur(10px)}
 .flame-glow.on{opacity:1}
-.flame{
-  width:40px;height:80px;opacity:0;
-  background:radial-gradient(ellipse at 50% 90%, #ffffff 0%, #ffe9a0 15%, #ff9b1c 40%, #ff5500 70%, transparent 100%);
-  border-radius:50% 50% 30% 30%;transform-origin:bottom center;
-  transition:opacity 0.3s;filter:blur(1px);margin-bottom:-6px;position:relative;
-  box-shadow:0 0 20px #ff5500;
-}
-.flame::before{
-  content:'';position:absolute;inset:20% 25% 10% 25%;
-  background:radial-gradient(ellipse at 50% 85%, #ffffff 0%, #fff 40%, transparent 80%);
-  border-radius:50% 50% 30% 30%;filter:blur(2px);
-}
+.flame{width:40px;height:80px;opacity:0;background:radial-gradient(ellipse at 50% 90%, #ffffff 0%, #ffe9a0 15%, #ff9b1c 40%, #ff5500 70%, transparent 100%);border-radius:50% 50% 30% 30%;transform-origin:bottom center;transition:opacity 0.3s;filter:blur(1px);margin-bottom:-6px;position:relative;box-shadow:0 0 20px #ff5500;}
+.flame::before{content:'';position:absolute;inset:20% 25% 10% 25%;background:radial-gradient(ellipse at 50% 85%, #ffffff 0%, #fff 40%, transparent 80%);border-radius:50% 50% 30% 30%;filter:blur(2px);}
 .flame.on{opacity:1;animation:flameFlicker .1s infinite alternate,flameWave .8s infinite ease-in-out}
 @keyframes flameFlicker{from{transform:scaleY(1) scaleX(1) translateX(0)}to{transform:scaleY(1.15) scaleX(0.95) translateX(1px)}}
 @keyframes flameWave{0%,100%{border-radius:50% 50% 30% 30%}50%{border-radius:45% 55% 20% 40%}}
@@ -298,11 +184,7 @@ select:focus{outline:none;border-color:#58a6ff}
 .burner-base::after{content:'';position:absolute;top:10px;left:50%;transform:translateX(-50%);width:50px;height:8px;background:rgba(0,0,0,0.5);border-radius:50%;filter:blur(4px)}
 
 /* ================= РЕЗУЛЬТАТЫ И ЛОГИ ================= */
-.result{
-  background:rgba(22, 27, 34, 0.8);backdrop-filter:blur(10px);
-  border:1px solid #30363d;border-radius:12px;padding:20px;min-height:120px;
-  box-shadow:0 8px 24px rgba(0,0,0,0.2);
-}
+.result{background:rgba(22, 27, 34, 0.8);backdrop-filter:blur(10px);border:1px solid #30363d;border-radius:12px;padding:20px;min-height:120px;box-shadow:0 8px 24px rgba(0,0,0,0.2);}
 .tag{display:inline-block;font-size:11px;padding:4px 10px;border-radius:20px;background:rgba(31,111,235,0.15);color:#58a6ff;border:1px solid rgba(31,111,235,0.3);margin-bottom:12px;font-weight:600;letter-spacing:0.5px}
 .eq{font-size:22px;line-height:1.8;letter-spacing:-0.5px;font-weight:600}
 .obs{margin-top:16px;color:#8b949e;font-size:14px;line-height:1.8;border-top:1px solid #30363d;padding-top:12px}
@@ -333,6 +215,13 @@ sub{font-size:.65em;vertical-align:-.25em}
       <div class="lbl">Реагент 2</div><div class="fml">—</div>
     </div>
     
+    <!-- СКРЫТЫЙ СЛОТ ДЛЯ 3-ГО РЕАГЕНТА -->
+    <div id="slot3Container" style="display:none;">
+      <div class="slot" id="s3" onclick="clearSlot(2)" ondragover="dragOver(event,2)" ondragleave="dragLeave(event)" ondrop="drop(event,2)">
+        <div class="lbl">Реагент 3</div><div class="fml">—</div>
+      </div>
+    </div>
+
     <input type="text" id="filter" placeholder="🔍 Поиск: HCl, сульфат, CuO...">
     <select id="combo" onchange="onComboChange(this)"></select>
     <div class="count" id="count"></div>
@@ -342,6 +231,7 @@ sub{font-size:.65em;vertical-align:-.25em}
     
     <div style="margin-top:20px; border-top:1px solid #30363d; padding-top:12px;">
       <div class="lbl" style="color:#8b949e; font-size:11px; margin-bottom:8px; font-weight:600; letter-spacing:1px;">ПРИБОРЫ</div>
+      <button class="btn-tool" onclick="addThirdReagent()">➕ Добавить 3-й реагент</button>
       <button class="btn-tool" id="btnBurette" onclick="toggleBurette()">🧪 Включить бюретку</button>
       <button class="btn-tool" id="btnFlask" onclick="toggleFlask()">⚗️ Коническая колба</button>
       <button class="btn-tool" onclick="addIndicator('phenolphthalein')">Добавить фенолфталеин</button>
@@ -412,23 +302,16 @@ sub{font-size:.65em;vertical-align:-.25em}
 </div>
 
 <script>
-/* ================= БАЗА ДАННЫХ (ВСЕ 118 ЭЛЕМЕНТОВ) ================= */
+/* ================= БАЗА ДАННЫХ (118 ЭЛЕМЕНТОВ) ================= */
 const EL_DATA=[
-// Период 1
 [1,'H','Водород',1,1,'nonmetal'],[2,'He','Гелий',18,1,'noble'],
-// Период 2
 [3,'Li','Литий',1,2,'alkali'],[4,'Be','Бериллий',2,2,'alkaline'],[5,'B','Бор',13,2,'metalloid'],[6,'C','Углерод',14,2,'nonmetal'],[7,'N','Азот',15,2,'nonmetal'],[8,'O','Кислород',16,2,'nonmetal'],[9,'F','Фтор',17,2,'halogen'],[10,'Ne','Неон',18,2,'noble'],
-// Период 3
 [11,'Na','Натрий',1,3,'alkali'],[12,'Mg','Магний',2,3,'alkaline'],[13,'Al','Алюминий',13,3,'post'],[14,'Si','Кремний',14,3,'metalloid'],[15,'P','Фосфор',15,3,'nonmetal'],[16,'S','Сера',16,3,'nonmetal'],[17,'Cl','Хлор',17,3,'halogen'],[18,'Ar','Аргон',18,3,'noble'],
-// Период 4
 [19,'K','Калий',1,4,'alkali'],[20,'Ca','Кальций',2,4,'alkaline'],[21,'Sc','Скандий',3,4,'transition'],[22,'Ti','Титан',4,4,'transition'],[23,'V','Ванадий',5,4,'transition'],[24,'Cr','Хром',6,4,'transition'],[25,'Mn','Марганец',7,4,'transition'],[26,'Fe','Железо',8,4,'transition'],[27,'Co','Кобальт',9,4,'transition'],[28,'Ni','Никель',10,4,'transition'],[29,'Cu','Медь',11,4,'transition'],[30,'Zn','Цинк',12,4,'transition'],[31,'Ga','Галлий',13,4,'post'],[32,'Ge','Германий',14,4,'metalloid'],[33,'As','Мышьяк',15,4,'metalloid'],[34,'Se','Селен',16,4,'nonmetal'],[35,'Br','Бром',17,4,'halogen'],[36,'Kr','Криптон',18,4,'noble'],
-// Период 5
 [37,'Rb','Рубидий',1,5,'alkali'],[38,'Sr','Стронций',2,5,'alkaline'],[39,'Y','Иттрий',3,5,'transition'],[40,'Zr','Цирконий',4,5,'transition'],[41,'Nb','Ниобий',5,5,'transition'],[42,'Mo','Молибден',6,5,'transition'],[43,'Tc','Технеций',7,5,'transition'],[44,'Ru','Рутений',8,5,'transition'],[45,'Rh','Родий',9,5,'transition'],[46,'Pd','Палладий',10,5,'transition'],[47,'Ag','Серебро',11,5,'transition'],[48,'Cd','Кадмий',12,5,'transition'],[49,'In','Индий',13,5,'post'],[50,'Sn','Олово',14,5,'post'],[51,'Sb','Сурьма',15,5,'metalloid'],[52,'Te','Теллур',16,5,'metalloid'],[53,'I','Иод',17,5,'halogen'],[54,'Xe','Ксенон',18,5,'noble'],
-// Период 6
 [55,'Cs','Цезий',1,6,'alkali'],[56,'Ba','Барий',2,6,'alkaline'],
 [57,'La','Лантан',3,9,'lanth'],[58,'Ce','Церий',4,9,'lanth'],[59,'Pr','Празеодим',5,9,'lanth'],[60,'Nd','Неодим',6,9,'lanth'],[61,'Pm','Прометий',7,9,'lanth'],[62,'Sm','Самарий',8,9,'lanth'],[63,'Eu','Европий',9,9,'lanth'],[64,'Gd','Гадолиний',10,9,'lanth'],[65,'Tb','Тербий',11,9,'lanth'],[66,'Dy','Диспрозий',12,9,'lanth'],[67,'Ho','Гольмий',13,9,'lanth'],[68,'Er','Эрбий',14,9,'lanth'],[69,'Tm','Тулий',15,9,'lanth'],[70,'Yb','Иттербий',16,9,'lanth'],[71,'Lu','Лютеций',17,9,'lanth'],
 [72,'Hf','Гафний',4,6,'transition'],[73,'Ta','Тантал',5,6,'transition'],[74,'W','Вольфрам',6,6,'transition'],[75,'Re','Рений',7,6,'transition'],[76,'Os','Осмий',8,6,'transition'],[77,'Ir','Иридий',9,6,'transition'],[78,'Pt','Платина',10,6,'transition'],[79,'Au','Золото',11,6,'transition'],[80,'Hg','Ртуть',12,6,'transition'],[81,'Tl','Таллий',13,6,'post'],[82,'Pb','Свинец',14,6,'post'],[83,'Bi','Висмут',15,6,'post'],[84,'Po','Полоний',16,6,'metalloid'],[85,'At','Астат',17,6,'halogen'],[86,'Rn','Радон',18,6,'noble'],
-// Период 7
 [87,'Fr','Франций',1,7,'alkali'],[88,'Ra','Радий',2,7,'alkaline'],
 [89,'Ac','Актиний',3,10,'act'],[90,'Th','Торий',4,10,'act'],[91,'Pa','Протактиний',5,10,'act'],[92,'U','Уран',6,10,'act'],[93,'Np','Нептуний',7,10,'act'],[94,'Pu','Плутоний',8,10,'act'],[95,'Am','Америций',9,10,'act'],[96,'Cm','Кюрий',10,10,'act'],[97,'Bk','Берклий',11,10,'act'],[98,'Cf','Калифорний',12,10,'act'],[99,'Es','Эйнштейний',13,10,'act'],[100,'Fm','Фермий',14,10,'act'],[101,'Md','Менделевий',15,10,'act'],[102,'No','Нобелий',16,10,'act'],[103,'Lr','Лоуренсий',17,10,'act'],
 [104,'Rf','Резерфордий',4,7,'transition'],[105,'Db','Дубний',5,7,'transition'],[106,'Sg','Сиборгий',6,7,'transition'],[107,'Bh','Борий',7,7,'transition'],[108,'Hs','Хассий',8,7,'transition'],[109,'Mt','Мейтнерий',9,7,'transition'],[110,'Ds','Дармштадтий',10,7,'transition'],[111,'Rg','Рентгений',11,7,'transition'],[112,'Cn','Коперниций',12,7,'transition'],[113,'Nh','Нихоний',13,7,'post'],[114,'Fl','Флеровий',14,7,'post'],[115,'Mc','Московий',15,7,'post'],[116,'Lv','Ливерморий',16,7,'post'],[117,'Ts','Теннессин',17,7,'halogen'],[118,'Og','Оганесон',18,7,'noble']
@@ -538,7 +421,6 @@ function buildCompounds(){
   list.push({id:'water',n:'вода',k:'water',f:'H<sub>2</sub>O'});
   list.push({id:'special_H2O2',n:'пероксид водорода',k:'liquid',f:'H<sub>2</sub>O<sub>2</sub>'});
   list.push({id:'special_MnO2',n:'диоксид марганца',k:'catalyst',f:'MnO<sub>2</sub>',cat:'Mn2',an:'O2'});
-
   return list;
 }
 const COMPOUNDS=buildCompounds();
@@ -713,7 +595,7 @@ function elementCompound(el,comp){
   return null;
 }
 
-/* ================= АУДИО ================= */
+/* ================= АУДИО И АНИМАЦИИ ================= */
 let audioCtx = null;
 function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
 function playSound(type) {
@@ -735,14 +617,10 @@ function playSound(type) {
   }
 }
 
-/* ================= АНИМАЦИИ ================= */
 const ANIM={bubbles:null,steam:null,precip:null,fire:null,heating:false,indicator:null,drops:0};
 let REPORT_LOGS = [];
 
-function getVesselEl(id) {
-  const isFlask = document.getElementById('flask').classList.contains('on');
-  return document.getElementById(isFlask ? id+'Flask' : id);
-}
+function getVesselEl(id) { const isFlask = document.getElementById('flask').classList.contains('on'); return document.getElementById(isFlask ? id+'Flask' : id); }
 function setLiquidColor(rgb){
   const liq=getVesselEl('liquid'); if(!liq) return;
   if(ANIM.indicator==='phenolphthalein' && rgb) { liq.style.background=`linear-gradient(180deg,rgba(200,0,100,0.5),rgba(200,0,100,0.8))`; }
@@ -800,6 +678,7 @@ function startPrecipitate(rgb){
 function stopPrecipitate(){if(ANIM.precip)clearInterval(ANIM.precip);ANIM.precip=null;['precipLayer','precipLayerFlask'].forEach(id=>{const l=document.getElementById(id);if(l)l.innerHTML='';});['sediment','sedimentFlask'].forEach(id=>{const s=document.getElementById(id);if(s)s.style.height='0';});}
 
 function flashBeaker(){const b=document.getElementById('beaker');b.classList.add('shaking');setTimeout(()=>b.classList.remove('shaking'),520);}
+
 function toggleHeat(){
   initAudio(); ANIM.heating=!ANIM.heating;
   const btn=document.getElementById('heatBtn'),flame=document.getElementById('flame'),glow=document.getElementById('flameGlow');
@@ -997,6 +876,9 @@ function decantLiquid() {
   if (SLOTS.length === 0) return; setLiquidLevel(0); stopBubbles();
   showResult('<div class="tag">Фильтрация</div>Жидкость слита. Осадок оставлен.'); log('✓ Слив жидкости');
 }
+function addThirdReagent() {
+  document.getElementById('slot3Container').style.display = 'block';
+}
 
 function getReagentState(slot){
   if(!slot)return null;
@@ -1032,30 +914,23 @@ function getSolidColor(slot){
 
 /* ================= RENDER UI ================= */
 (function renderPT(){
-  const glbl=document.getElementById('glbl');
-  for(let i=1;i<=18;i++){const d=document.createElement('div');d.textContent=i;glbl.appendChild(d);}
-  
+  const glbl=document.getElementById('glbl'); for(let i=1;i<=18;i++){const d=document.createElement('div');d.textContent=i;glbl.appendChild(d);}
   const pt=document.getElementById('ptable');
-  // Добавляем плейсхолдеры для лантаноидов и актиноидов (ряды 6 и 7)
+  
   const lanthPlaceholder = document.createElement('div');
   lanthPlaceholder.className = 'el lanth-placeholder';
-  lanthPlaceholder.style.gridColumn = '3';
-  lanthPlaceholder.style.gridRow = '6';
+  lanthPlaceholder.style.gridColumn = '3'; lanthPlaceholder.style.gridRow = '6';
   lanthPlaceholder.innerHTML = '<span style="font-size:9px">57-71</span>';
-  lanthPlaceholder.title = 'Лантаноиды (см. ряд ниже)';
-  pt.appendChild(lanthPlaceholder);
+  lanthPlaceholder.title = 'Лантаноиды (см. ряд ниже)'; pt.appendChild(lanthPlaceholder);
 
   const actPlaceholder = document.createElement('div');
   actPlaceholder.className = 'el act-placeholder';
-  actPlaceholder.style.gridColumn = '3';
-  actPlaceholder.style.gridRow = '7';
+  actPlaceholder.style.gridColumn = '3'; actPlaceholder.style.gridRow = '7';
   actPlaceholder.innerHTML = '<span style="font-size:9px">89-103</span>';
-  actPlaceholder.title = 'Актиноиды (см. ряд ниже)';
-  pt.appendChild(actPlaceholder);
+  actPlaceholder.title = 'Актиноиды (см. ряд ниже)'; pt.appendChild(actPlaceholder);
 
   EL.forEach(e=>{
     const d=document.createElement('div');d.className='el c-'+e.cat;
-    // Если это La-Lu или Ac-Lr, они уже стоят на своих местах (per 9 и 10)
     d.style.gridColumn=e.grp;d.style.gridRow=e.per;d.dataset.sym=e.sym; d.draggable = true;
     d.ondragstart = (ev) => ev.dataTransfer.setData('text/plain', JSON.stringify({type:'element', el:e}));
     d.innerHTML=`<span class="z">${e.z}</span><span class="sy">${e.sym}</span><span class="nm">${e.name}</span>`;
@@ -1092,8 +967,9 @@ function onComboChange(sel){if(sel.value)pickCompound(sel.value);sel.value='';}
 const SLOTS=[null,null,null];
 function pickElement(e){ const item={type:'element',el:e}; if(!SLOTS[0])SLOTS[0]=item;else if(!SLOTS[1])SLOTS[1]=item;else SLOTS[2]=item; render(); }
 function pickCompound(id){ const c=COMPOUNDS.find(x=>x.id===id);if(!c)return; const item={type:'compound',comp:c}; if(!SLOTS[0])SLOTS[0]=item;else if(!SLOTS[1])SLOTS[1]=item;else SLOTS[2]=item; render(); }
-function clearSlot(i){SLOTS[i]=null;render();}
-function clearAll(){SLOTS[0]=SLOTS[1]=SLOTS[2]=null;document.getElementById('result').innerHTML='Выберите два реагента и нажмите «Смешать»';resetLab();render();}
+function clearSlot(i){SLOTS[i]=null; if(i===2) document.getElementById('slot3Container').style.display='none'; render();}
+function clearAll(){SLOTS[0]=SLOTS[1]=SLOTS[2]=null;document.getElementById('slot3Container').style.display='none';document.getElementById('result').innerHTML='Выберите два реагента и нажмите «Смешать»';resetLab();render();}
+
 function stateLabel(st){
   if(st==='solid')return{txt:'твёрдое',cls:'solid'};if(st==='liquid')return{txt:'раствор',cls:'liquid'};
   if(st==='slightly')return{txt:'малораств.',cls:'slightly'};if(st==='gas')return{txt:'газ',cls:'gas'};
@@ -1131,16 +1007,56 @@ function log(msg){
 
 function mix(isDrip = false){
   if(!SLOTS[0]||!SLOTS[1]){showResult('<span class="err">Заполните хотя бы два слота реагентов.</span>');return;}
-  const res = react(SLOTS[0], SLOTS[1]);
+  
+  let res = react(SLOTS[0], SLOTS[1]);
+  let secondRes = null;
+  let eq2 = '';
+
+  if (SLOTS[2] && res) {
+    // Если есть 3-й реагент, и первая реакция прошла, ищем, с чем он может прореагировать
+    for (const prod of res.right) {
+      if (prod.cat && prod.an) {
+        let pComp = null;
+        if (prod.precip) {
+          pComp = { k: 'salt', cat: prod.cat, an: prod.an, f: prod.h, n: prod.p };
+        } else if (prod.h && !prod.h.includes('H<sub>2</sub>O')) {
+          pComp = { k: 'salt', cat: prod.cat, an: prod.an, f: prod.h, n: prod.p };
+        }
+        
+        if (pComp) {
+          let testRes = react({type:'compound', comp: pComp}, SLOTS[2]);
+          if (!testRes) testRes = react(SLOTS[2], {type:'compound', comp: pComp});
+          
+          if (testRes) {
+            secondRes = testRes;
+            eq2 = sideHTML(secondRes.left) + ' → ' + sideHTML(secondRes.right);
+            break;
+          }
+        }
+      }
+    }
+  }
+
   if(!res){ showResult('<span class="err">Реакция в выбранных условиях не идёт.</span>'); log('✗ '+describe(SLOTS[0])+' + '+describe(SLOTS[1])+' — нет реакции');resetLab();renderSolidChunks();return; }
   if(res.note&&!res.left){showResult('<div class="tag">Особый случай</div>'+res.note);return;}
   
   playReaction(res, isDrip);
   const eq=sideHTML(res.left)+' → '+sideHTML(res.right);
+  
+  let html = `<div class="tag">${isDrip ? 'Титрование завершено!' : res.type}</div><div class="eq">${eq}</div>`;
+  
+  if (secondRes) {
+    html += `<div class="tag" style="margin-top:16px; background:#8957e522; color:#a371f7; border-color:#a371f755;">Реакция с 3-м реагентом</div>`;
+    html += `<div class="eq" style="font-size:18px; color:#a371f7;">${eq2}</div>`;
+    log('✓ 3-й реагент: '+eq2);
+  }
+
   const observations=[];
   res.right.forEach(t=>{if(t.obs)observations.push('• '+t.obs);});
   if(res.note)observations.push('ℹ '+res.note);
-  showResult(`<div class="tag">${isDrip ? 'Титрование завершено!' : res.type}</div><div class="eq">${eq}</div>${observations.length?'<div class="obs">'+observations.join('<br>')+'</div>':''}`);
+  if(observations.length) html += '<div class="obs">'+observations.join('<br>')+'</div>';
+  
+  showResult(html);
   log('✓ '+describe(SLOTS[0])+' + '+describe(SLOTS[1])+' → '+res.type);
 }
 
@@ -1157,5 +1073,3 @@ rebuildCombo();render();
 </script>
 </body>
 </html>
-```
-

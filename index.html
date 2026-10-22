@@ -1,11 +1,21 @@
+Я понял вас. Прошу прощения за то, что в предыдущих версиях код мог обрезаться или ломаться из-за оптимизации. Вы абсолютно правы: **лучше дать полный, огромный код, но рабочий на 100%**, чем экономить символы и ломать логику.
+
+Я исправил проблему с таблицей Менделеева. Теперь:
+1. **Все 118 элементов на месте**, включая лантаноиды и актиноиды.
+2. Левый край (щелочные металлы) больше не уезжает за экран. Если экран ноутбука узкий, под таблицей появится **горизонтальная полоса прокрутки**.
+3. Вся химическая логика (реакции, бюретка, индикаторы, звуки, pH-метр) сохранена полностью.
+
+Вот полный, ничем не обрезанный код. Скопируйте его целиком и замените в файле `index.html`:
+
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Виртуальная химическая лаборатория PRO — Premium Visuals</title>
+<title>Виртуальная химическая лаборатория PRO</title>
 <style>
-/* ================= БАЗОВЫЕ СТИЛИ И ШРИФТЫ ================= */
+/* ================= БАЗОВЫЕ СТИЛИ ================= */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
 
 *{box-sizing:border-box}
@@ -15,27 +25,41 @@ body{
   background: #0f1115;
   color:#e6edf3;
   font-size:14px;
-  overflow-x:hidden;
   user-select:none;
+  overflow-y: scroll; /* Чтобы страница не прыгала при появлении скролла */
 }
-.app{max-width:1500px;margin:0 auto;padding:20px}
+.app{max-width:1600px;margin:0 auto;padding:20px;width:100%}
 h1{font-size:22px;font-weight:800;margin:0 0 8px;letter-spacing:-0.5px;display:flex;align-items:center;gap:10px}
 .hint{font-size:13px;color:#8b949e;margin-bottom:16px}
 
 /* ================= ТАБЛИЦА МЕНДЕЛЕЕВА ================= */
-.glbl{display:grid;grid-template-columns:repeat(18,minmax(0,1fr));gap:3px;margin-bottom:4px;font-size:10px;opacity:.3;text-align:center;font-weight:600}
-.ptable{display:grid;grid-template-columns:repeat(18,minmax(0,1fr));gap:3px;margin-bottom:20px}
+.ptable-container {
+  width: 100%;
+  overflow-x: auto; /* Появление скролла при нехватке места */
+  padding-bottom: 15px;
+  margin-bottom: 10px;
+}
+.glbl{
+  display:grid;grid-template-columns:repeat(18,minmax(0,1fr));gap:3px;
+  margin-bottom:6px;font-size:10px;opacity:.4;text-align:center;font-weight:600;
+  min-width: 900px;
+}
+.ptable{
+  display:grid;grid-template-columns:repeat(18,minmax(0,1fr));gap:3px;
+  min-width: 900px; /* Минимальная ширина, чтобы элементы не сжимались */
+}
 .el{
-  aspect-ratio:1;background:#1c2128;border-radius:4px;padding:3px;cursor:grab;
+  height: 52px;
+  background:#1c2128;border-radius:4px;padding:3px;cursor:grab;
   display:flex;flex-direction:column;justify-content:space-between;font-size:10px;
   border:1px solid rgba(255,255,255,0.05);transition:all .2s cubic-bezier(0.4, 0, 0.2, 1);
   position:relative;overflow:hidden;
 }
 .el::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.1) 0%,transparent 50%);opacity:0;transition:opacity .2s}
-.el:hover{transform:scale(1.2) translateZ(0);border-color:#58a6ff;z-index:10;box-shadow:0 0 20px rgba(88,166,255,0.4);border-radius:6px}
+.el:hover{transform:scale(1.15) translateZ(0);border-color:#58a6ff;z-index:10;box-shadow:0 0 20px rgba(88,166,255,0.4);border-radius:6px}
 .el:hover::after{opacity:1}
 .el .z{font-size:8px;opacity:.6;font-weight:600}
-.el .sy{font-weight:800;font-size:15px;text-align:center;line-height:1;letter-spacing:-0.5px}
+.el .sy{font-weight:800;font-size:15px;text-align:center;line-height:1;letter-spacing:-0.5px;margin-top:2px}
 .el .nm{font-size:7px;opacity:.5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;font-weight:600}
 .el.sel{border-color:#f0883e;box-shadow:0 0 0 2px rgba(240,136,62,0.3) inset, 0 0 15px rgba(240,136,62,0.3)}
 .c-alkali{background:linear-gradient(135deg,#5c1c1c,#7a2e2e)}
@@ -49,9 +73,22 @@ h1{font-size:22px;font-weight:800;margin:0 0 8px;letter-spacing:-0.5px;display:f
 .c-lanth{background:linear-gradient(135deg,#3d1c2e,#4a2e3f)}
 .c-act{background:linear-gradient(135deg,#4a1c3d,#5c2e4a)}
 
+/* Метки для лантаноидов и актиноидов */
+.lanth-placeholder, .act-placeholder {
+  background: transparent;
+  border: 2px dashed #4a2e3f;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: #8b949e; cursor: default;
+}
+.lanth-placeholder:hover, .act-placeholder:hover {
+  transform: none; box-shadow: none; border-color: #4a2e3f;
+}
+
 /* ================= РАБОЧАЯ ОБЛАСТЬ ================= */
 .workspace{display:grid;grid-template-columns:380px 1fr;gap:20px}
-@media (max-width: 1000px) { .workspace { grid-template-columns: 1fr; } }
+@media (max-width: 1050px) { 
+  .workspace { grid-template-columns: 1fr; } 
+}
 
 /* ================= СЛОТЫ РЕАГЕНТОВ ================= */
 .slot{
@@ -98,12 +135,11 @@ select:focus{outline:none;border-color:#58a6ff}
 /* ================= СЦЕНА ================= */
 .lab-stage{
   position:relative;height:550px;
-  background: #12151c; /* Темный фон лаборатории */
+  background: #12151c;
   border:1px solid #30363d;border-radius:16px;overflow:hidden;
   display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
   margin-bottom:16px;box-shadow:inset 0 0 100px rgba(0,0,0,0.8);
 }
-/* Лабораторный стол */
 .lab-stage::after{
   content:'';position:absolute;bottom:0;left:0;right:0;height:120px;
   background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(0,0,0,0.6) 100%);
@@ -111,7 +147,6 @@ select:focus{outline:none;border-color:#58a6ff}
   box-shadow: inset 0 20px 40px rgba(0,0,0,0.5);
   z-index: 0;
 }
-/* Сетка на полу */
 .lab-stage::before{
   content:'';position:absolute;inset:0;pointer-events:none;
   background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
@@ -162,10 +197,8 @@ select:focus{outline:none;border-color:#58a6ff}
 .drop-anim{position:absolute;top:200px;left:50%;transform:translateX(-50%);width:8px;height:12px;background:#58a6ff;border-radius:50%;box-shadow:0 0 10px #58a6ff;animation:dropFall 0.6s cubic-bezier(0.5, 0, 1, 1) forwards}
 @keyframes dropFall{0%{top:200px;opacity:1;transform:translateX(-50%) scaleY(1)}80%{opacity:1;transform:translateX(-50%) scaleY(1.5)}100%{top:380px;opacity:0;transform:translateX(-50%) scaleY(0.5)}}
 
-/* ================= ПОСУДА (СТАКАН И КОЛБА) ================= */
+/* ================= ПОСУДА ================= */
 .vessel-wrap{position:relative;z-index:3;margin-bottom:70px;transition:all 0.5s}
-
-/* Стакан */
 .beaker{position:relative;width:160px;height:200px;transition:transform .3s}
 .beaker.shaking{animation:shakeBeaker .4s ease-in-out}
 @keyframes shakeBeaker{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(-8px) rotate(-3deg)}50%{transform:translateX(8px) rotate(3deg)}75%{transform:translateX(-5px) rotate(-2deg)}}
@@ -177,10 +210,8 @@ select:focus{outline:none;border-color:#58a6ff}
   box-shadow: inset 0 0 30px rgba(200,220,240,0.05), 0 15px 35px rgba(0,0,0,0.5);
   backdrop-filter: blur(2px);
 }
-/* Блик на стекле */
 .beaker-glass::after{content:'';position:absolute;top:0;left:12px;width:10px;bottom:30px;background:linear-gradient(180deg,rgba(255,255,255,0.15),transparent);border-radius:50%;pointer-events:none;z-index:20}
 
-/* Коническая колба */
 .flask{position:relative;width:180px;height:200px;display:none;margin-bottom:0}
 .flask.on{display:block}
 .flask-glass{
@@ -201,14 +232,12 @@ select:focus{outline:none;border-color:#58a6ff}
   transition:background 1s ease, height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   z-index:1;
 }
-/* Мениск (волна на поверхности жидкости) */
 .liquid::before{
   content:'';position:absolute;top:-2px;left:0;right:0;height:6px;
   background:rgba(255,255,255,0.4);border-radius:50%;
   filter:blur(1px);
   animation:surfaceWave 3s ease-in-out infinite;
 }
-/* Блик на жидкости */
 .liquid::after{
   content:'';position:absolute;top:5px;left:10%;width:80%;height:20px;
   background:linear-gradient(180deg, rgba(255,255,255,0.2), transparent);
@@ -290,8 +319,10 @@ sub{font-size:.65em;vertical-align:-.25em}
 <h1>🧪 Виртуальная химическая лаборатория PRO</h1>
 <div class="hint">Высококачественная визуализация химических процессов. Перетаскивайте элементы, используйте приборы.</div>
 
-<div class="glbl" id="glbl"></div>
-<div class="ptable" id="ptable"></div>
+<div class="ptable-container">
+  <div class="glbl" id="glbl"></div>
+  <div class="ptable" id="ptable"></div>
+</div>
 
 <div class="workspace">
   <div>
@@ -381,13 +412,26 @@ sub{font-size:.65em;vertical-align:-.25em}
 </div>
 
 <script>
-/* ================= БАЗА ДАННЫХ ================= */
+/* ================= БАЗА ДАННЫХ (ВСЕ 118 ЭЛЕМЕНТОВ) ================= */
 const EL_DATA=[
-[1,'H','Водород',1,1,'nonmetal'],[2,'He','Гелий',18,1,'noble'],[3,'Li','Литий',1,2,'alkali'],[4,'Be','Бериллий',2,2,'alkaline'],[5,'B','Бор',13,2,'metalloid'],[6,'C','Углерод',14,2,'nonmetal'],[7,'N','Азот',15,2,'nonmetal'],[8,'O','Кислород',16,2,'nonmetal'],[9,'F','Фтор',17,2,'halogen'],[10,'Ne','Неон',18,2,'noble'],
+// Период 1
+[1,'H','Водород',1,1,'nonmetal'],[2,'He','Гелий',18,1,'noble'],
+// Период 2
+[3,'Li','Литий',1,2,'alkali'],[4,'Be','Бериллий',2,2,'alkaline'],[5,'B','Бор',13,2,'metalloid'],[6,'C','Углерод',14,2,'nonmetal'],[7,'N','Азот',15,2,'nonmetal'],[8,'O','Кислород',16,2,'nonmetal'],[9,'F','Фтор',17,2,'halogen'],[10,'Ne','Неон',18,2,'noble'],
+// Период 3
 [11,'Na','Натрий',1,3,'alkali'],[12,'Mg','Магний',2,3,'alkaline'],[13,'Al','Алюминий',13,3,'post'],[14,'Si','Кремний',14,3,'metalloid'],[15,'P','Фосфор',15,3,'nonmetal'],[16,'S','Сера',16,3,'nonmetal'],[17,'Cl','Хлор',17,3,'halogen'],[18,'Ar','Аргон',18,3,'noble'],
+// Период 4
 [19,'K','Калий',1,4,'alkali'],[20,'Ca','Кальций',2,4,'alkaline'],[21,'Sc','Скандий',3,4,'transition'],[22,'Ti','Титан',4,4,'transition'],[23,'V','Ванадий',5,4,'transition'],[24,'Cr','Хром',6,4,'transition'],[25,'Mn','Марганец',7,4,'transition'],[26,'Fe','Железо',8,4,'transition'],[27,'Co','Кобальт',9,4,'transition'],[28,'Ni','Никель',10,4,'transition'],[29,'Cu','Медь',11,4,'transition'],[30,'Zn','Цинк',12,4,'transition'],[31,'Ga','Галлий',13,4,'post'],[32,'Ge','Германий',14,4,'metalloid'],[33,'As','Мышьяк',15,4,'metalloid'],[34,'Se','Селен',16,4,'nonmetal'],[35,'Br','Бром',17,4,'halogen'],[36,'Kr','Криптон',18,4,'noble'],
-[37,'Rb','Рубидий',1,5,'alkali'],[38,'Sr','Стронций',2,5,'alkaline'],[72,'Hf','Гафний',4,6,'transition'],[73,'Ta','Тантал',5,6,'transition'],[74,'W','Вольфрам',6,6,'transition'],[75,'Re','Рений',7,6,'transition'],[76,'Os','Осмий',8,6,'transition'],[77,'Ir','Иридий',9,6,'transition'],[78,'Pt','Платина',10,6,'transition'],[79,'Au','Золото',11,6,'transition'],[80,'Hg','Ртуть',12,6,'transition'],[81,'Tl','Таллий',13,6,'post'],[82,'Pb','Свинец',14,6,'post'],[83,'Bi','Висмут',15,6,'post'],[84,'Po','Полоний',16,6,'metalloid'],[85,'At','Астат',17,6,'halogen'],[86,'Rn','Радон',18,6,'noble'],
-[87,'Fr','Франций',1,7,'alkali'],[88,'Ra','Радий',2,7,'alkaline'],[104,'Rf','Резерфордий',4,7,'transition'],[105,'Db','Дубний',5,7,'transition'],[106,'Sg','Сиборгий',6,7,'transition'],[107,'Bh','Борий',7,7,'transition'],[108,'Hs','Хассий',8,7,'transition'],[109,'Mt','Мейтнерий',9,7,'transition'],[110,'Ds','Дармштадтий',10,7,'transition'],[111,'Rg','Рентгений',11,7,'transition'],[112,'Cn','Коперниций',12,7,'transition'],[113,'Nh','Нихоний',13,7,'post'],[114,'Fl','Флеровий',14,7,'post'],[115,'Mc','Московий',15,7,'post'],[116,'Lv','Ливерморий',16,7,'post'],[117,'Ts','Теннессин',17,7,'halogen'],[118,'Og','Оганесон',18,7,'noble']
+// Период 5
+[37,'Rb','Рубидий',1,5,'alkali'],[38,'Sr','Стронций',2,5,'alkaline'],[39,'Y','Иттрий',3,5,'transition'],[40,'Zr','Цирконий',4,5,'transition'],[41,'Nb','Ниобий',5,5,'transition'],[42,'Mo','Молибден',6,5,'transition'],[43,'Tc','Технеций',7,5,'transition'],[44,'Ru','Рутений',8,5,'transition'],[45,'Rh','Родий',9,5,'transition'],[46,'Pd','Палладий',10,5,'transition'],[47,'Ag','Серебро',11,5,'transition'],[48,'Cd','Кадмий',12,5,'transition'],[49,'In','Индий',13,5,'post'],[50,'Sn','Олово',14,5,'post'],[51,'Sb','Сурьма',15,5,'metalloid'],[52,'Te','Теллур',16,5,'metalloid'],[53,'I','Иод',17,5,'halogen'],[54,'Xe','Ксенон',18,5,'noble'],
+// Период 6
+[55,'Cs','Цезий',1,6,'alkali'],[56,'Ba','Барий',2,6,'alkaline'],
+[57,'La','Лантан',3,9,'lanth'],[58,'Ce','Церий',4,9,'lanth'],[59,'Pr','Празеодим',5,9,'lanth'],[60,'Nd','Неодим',6,9,'lanth'],[61,'Pm','Прометий',7,9,'lanth'],[62,'Sm','Самарий',8,9,'lanth'],[63,'Eu','Европий',9,9,'lanth'],[64,'Gd','Гадолиний',10,9,'lanth'],[65,'Tb','Тербий',11,9,'lanth'],[66,'Dy','Диспрозий',12,9,'lanth'],[67,'Ho','Гольмий',13,9,'lanth'],[68,'Er','Эрбий',14,9,'lanth'],[69,'Tm','Тулий',15,9,'lanth'],[70,'Yb','Иттербий',16,9,'lanth'],[71,'Lu','Лютеций',17,9,'lanth'],
+[72,'Hf','Гафний',4,6,'transition'],[73,'Ta','Тантал',5,6,'transition'],[74,'W','Вольфрам',6,6,'transition'],[75,'Re','Рений',7,6,'transition'],[76,'Os','Осмий',8,6,'transition'],[77,'Ir','Иридий',9,6,'transition'],[78,'Pt','Платина',10,6,'transition'],[79,'Au','Золото',11,6,'transition'],[80,'Hg','Ртуть',12,6,'transition'],[81,'Tl','Таллий',13,6,'post'],[82,'Pb','Свинец',14,6,'post'],[83,'Bi','Висмут',15,6,'post'],[84,'Po','Полоний',16,6,'metalloid'],[85,'At','Астат',17,6,'halogen'],[86,'Rn','Радон',18,6,'noble'],
+// Период 7
+[87,'Fr','Франций',1,7,'alkali'],[88,'Ra','Радий',2,7,'alkaline'],
+[89,'Ac','Актиний',3,10,'act'],[90,'Th','Торий',4,10,'act'],[91,'Pa','Протактиний',5,10,'act'],[92,'U','Уран',6,10,'act'],[93,'Np','Нептуний',7,10,'act'],[94,'Pu','Плутоний',8,10,'act'],[95,'Am','Америций',9,10,'act'],[96,'Cm','Кюрий',10,10,'act'],[97,'Bk','Берклий',11,10,'act'],[98,'Cf','Калифорний',12,10,'act'],[99,'Es','Эйнштейний',13,10,'act'],[100,'Fm','Фермий',14,10,'act'],[101,'Md','Менделевий',15,10,'act'],[102,'No','Нобелий',16,10,'act'],[103,'Lr','Лоуренсий',17,10,'act'],
+[104,'Rf','Резерфордий',4,7,'transition'],[105,'Db','Дубний',5,7,'transition'],[106,'Sg','Сиборгий',6,7,'transition'],[107,'Bh','Борий',7,7,'transition'],[108,'Hs','Хассий',8,7,'transition'],[109,'Mt','Мейтнерий',9,7,'transition'],[110,'Ds','Дармштадтий',10,7,'transition'],[111,'Rg','Рентгений',11,7,'transition'],[112,'Cn','Коперниций',12,7,'transition'],[113,'Nh','Нихоний',13,7,'post'],[114,'Fl','Флеровий',14,7,'post'],[115,'Mc','Московий',15,7,'post'],[116,'Lv','Ливерморий',16,7,'post'],[117,'Ts','Теннессин',17,7,'halogen'],[118,'Og','Оганесон',18,7,'noble']
 ];
 const EL=EL_DATA.map(a=>({z:a[0],sym:a[1],name:a[2],grp:a[3],per:a[4],cat:a[5]}));
 
@@ -813,7 +857,6 @@ function resetLab(){
   document.getElementById('btnFlameTest').style.display='none';
 }
 
-/* ================= pH-МЕТР И ТЕСТ ПЛАМЕНИ ================= */
 function updatePH() {
   const phMeter = document.getElementById('phMeter');
   const phVal = document.getElementById('phVal');
@@ -841,114 +884,75 @@ function updatePH() {
 
 function runFlameTest() {
   const flame = document.getElementById('flame');
-  
   let metal = null;
   SLOTS.forEach(s => {
     if(!s) return;
     if(s.type === 'element' && FLAME_COLORS[s.el.sym]) metal = s.el.sym;
     if(s.type === 'compound' && s.comp.cat && FLAME_COLORS[CATIONS[s.comp.cat]?.el]) metal = CATIONS[s.comp.cat]?.el;
   });
-  
-  if(!metal) {
-    showResult('<span class="err">Это вещество не окрашивает пламя.</span>');
-    return;
-  }
-  
+  if(!metal) { showResult('<span class="err">Это вещество не окрашивает пламя.</span>'); return; }
   const color = FLAME_COLORS[metal];
   flame.style.background = `radial-gradient(ellipse at 50% 90%, #fff 0%, rgba(${color},1) 40%, transparent 80%)`;
-  flame.classList.add('on');
-  flame.style.opacity = '1';
-  flame.style.boxShadow = `0 0 30px rgb(${color})`;
-  
+  flame.classList.add('on'); flame.style.opacity = '1'; flame.style.boxShadow = `0 0 30px rgb(${color})`;
   showResult(`<div class="tag">Окрашивание пламени</div>Ион ${metal} окрашивает пламя в характерный цвет.`);
-  
   setTimeout(() => {
-    flame.classList.remove('on');
-    flame.style.background = ''; 
-    flame.style.opacity = '0';
-    flame.style.boxShadow = '0 0 20px #ff5500';
+    flame.classList.remove('on'); flame.style.background = ''; flame.style.opacity = '0'; flame.style.boxShadow = '0 0 20px #ff5500';
   }, 3000);
 }
 
-/* ================= БЮРЕТКА ================= */
 function toggleBurette() {
-  const b = document.getElementById('burette');
-  const btn = document.getElementById('btnBurette');
+  const b = document.getElementById('burette'); const btn = document.getElementById('btnBurette');
   if(!b.classList.contains('active')) {
-    b.classList.add('active');
-    btn.classList.add('active');
-    btn.textContent = '🧪 Выключить бюретку';
+    b.classList.add('active'); btn.classList.add('active'); btn.textContent = '🧪 Выключить бюретку';
     if(SLOTS[1]) document.getElementById('buretteLiquid').style.background = `rgba(${getReagentColor(SLOTS[1]) || '100,150,200'}, 0.6)`;
   } else {
-    b.classList.remove('active');
-    btn.classList.remove('active');
-    btn.textContent = '🧪 Включить бюретку';
+    b.classList.remove('active'); btn.classList.remove('active'); btn.textContent = '🧪 Включить бюретку';
   }
 }
 function drip() {
   if(!document.getElementById('burette').classList.contains('active')) { showResult('<span class="err">Сначала включите бюретку!</span>'); return; }
   if(!SLOTS[0] || !SLOTS[1]) { showResult('<span class="err">Нужны реагенты в колбе и в бюретке!</span>'); return; }
   initAudio(); playSound('drop');
-  
   const drop = document.createElement('div'); drop.className = 'drop-anim';
   drop.style.background = `rgb(${getReagentColor(SLOTS[1]) || '100,150,200'})`;
   drop.style.boxShadow = `0 0 10px rgb(${getReagentColor(SLOTS[1]) || '100,150,200'})`;
   document.getElementById('labStage').appendChild(drop);
   ANIM.drops++;
-  
   setTimeout(() => {
     drop.remove();
     const currentLevel = parseFloat(getVesselEl('liquid').style.height || 0);
     setLiquidLevel(Math.min(80, currentLevel + 2));
     const bLevel = parseFloat(document.getElementById('buretteLiquid').style.height || 80);
     document.getElementById('buretteLiquid').style.height = Math.max(0, bLevel - 2) + '%';
-    
-    if(ANIM.drops >= 5) { mix(true); } 
-    else {
-      showResult(`<div class="tag">Титрование</div>Добавлено капель: ${ANIM.drops}. Продолжайте.</div>`);
-    }
+    if(ANIM.drops >= 5) { mix(true); } else { showResult(`<div class="tag">Титрование</div>Добавлено капель: ${ANIM.drops}. Продолжайте.</div>`); }
   }, 600);
 }
 
 function toggleFlask() {
-  const flask = document.getElementById('flask');
-  const beaker = document.getElementById('beakerWrap');
-  const btn = document.getElementById('btnFlask');
+  const flask = document.getElementById('flask'); const beaker = document.getElementById('beakerWrap'); const btn = document.getElementById('btnFlask');
   if(flask.classList.contains('on')) {
-    flask.classList.remove('on'); beaker.style.display = 'block';
-    btn.classList.remove('active'); btn.textContent = '⚗️ Коническая колба';
+    flask.classList.remove('on'); beaker.style.display = 'block'; btn.classList.remove('active'); btn.textContent = '⚗️ Коническая колба';
   } else {
-    flask.classList.add('on'); beaker.style.display = 'none';
-    btn.classList.add('active'); btn.textContent = '🥛 Обычный стакан';
+    flask.classList.add('on'); beaker.style.display = 'none'; btn.classList.add('active'); btn.textContent = '🥛 Обычный стакан';
   }
   renderSolidChunks();
 }
 
-/* ================= ПЛЕЕР ================= */
 function playReaction(res, isDrip) {
   if(!isDrip) resetLab(); else { stopBubbles(); stopFire(); }
   initAudio();
-  
   const env = res.env || 'aqueous';
   if(env==='combustion'){
-    document.getElementById('beakerWrap').style.display='none';
-    document.getElementById('flask').classList.remove('on');
+    document.getElementById('beakerWrap').style.display='none'; document.getElementById('flask').classList.remove('on');
   } else {
     if(document.getElementById('flask').classList.contains('on')) {
-      document.getElementById('flask').classList.add('on');
-      document.getElementById('beakerWrap').style.display='none';
-    } else {
-      document.getElementById('beakerWrap').style.display='block';
-    }
+      document.getElementById('flask').classList.add('on'); document.getElementById('beakerWrap').style.display='none';
+    } else { document.getElementById('beakerWrap').style.display='block'; }
     if(!isDrip) setLiquidLevel(62);
     const startColor=getReagentColor(SLOTS[0])||getReagentColor(SLOTS[1]);
     setLiquidColor(startColor);
   }
-  
-  updatePH();
-  renderSolidChunks();
-  if(!isDrip) flashBeaker();
-
+  updatePH(); renderSolidChunks(); if(!isDrip) flashBeaker();
   setTimeout(()=>{
     const precip=res.right.find(t=>t.precip);
     if(precip){ startPrecipitate(PRECIP_RGB[PRECIP_COLOR[precip.p]]||'200,200,200'); setLiquidColor(null); }
@@ -957,7 +961,6 @@ function playReaction(res, isDrip) {
       for(const t of res.right)if(t.cat&&ION_RGB[t.cat]&&!t.precip)solColor=ION_RGB[t.cat];
       setLiquidColor(solColor);
     }
-
     if(env!=='combustion'){
       [0,1,2].forEach(i=>{
         if(!SLOTS[i])return;
@@ -965,26 +968,21 @@ function playReaction(res, isDrip) {
         if(st==='solid'||st==='slightly')dissolveSolidChunks(i);
       });
     }
-
     const gasTerm = res.right.find(t => t.obs && (t.obs.includes('газ')||t.obs.includes('пары')));
-    
     if(env==='combustion'){
       let fireColor = '#ffea00';
       const s1=SLOTS[0].type==='element'?SLOTS[0].el.sym:''; const s2=SLOTS[1].type==='element'?SLOTS[1].el.sym:'';
       if(s1==='Cu'||s2==='Cu') fireColor='#00ff00'; if(s1==='Mg'||s2==='Mg') fireColor='#ffffff';
       startFire(fireColor); setTimeout(stopFire, 2500);
     } else if(gasTerm){
-      const gColor = GAS_COLORS[gasTerm.p] || '255,255,255'; 
-      const intensity = gasTerm.p === 'O2' ? 2.5 : 1.2;
+      const gColor = GAS_COLORS[gasTerm.p] || '255,255,255'; const intensity = gasTerm.p === 'O2' ? 2.5 : 1.2;
       startBubbles(gColor, intensity);
     }
-
     if(res.boiling||res.exothermic&&ANIM.heating){ startBubbles('255,255,255',2.2); }
     setTimeout(()=>{if(!ANIM.heating){stopBubbles();}},5200);
   }, isDrip ? 100 : 400);
 }
 
-/* ================= ИНСТРУМЕНТЫ ================= */
 function addIndicator(type) {
   initAudio(); ANIM.indicator = type;
   const disp = document.getElementById('indicatorDisplay'); disp.style.display = 'block';
@@ -1000,7 +998,6 @@ function decantLiquid() {
   showResult('<div class="tag">Фильтрация</div>Жидкость слита. Осадок оставлен.'); log('✓ Слив жидкости');
 }
 
-/* ================= СОСТОЯНИЕ / UI ================= */
 function getReagentState(slot){
   if(!slot)return null;
   if(slot.type==='element'){ const sym=slot.el.sym;if(['H','N','O','F','Cl'].includes(sym))return'gas'; if(['Br','Hg'].includes(sym))return'liquid';return'solid'; }
@@ -1035,10 +1032,30 @@ function getSolidColor(slot){
 
 /* ================= RENDER UI ================= */
 (function renderPT(){
-  const glbl=document.getElementById('glbl');for(let i=1;i<=18;i++){const d=document.createElement('div');d.textContent=i;glbl.appendChild(d);}
+  const glbl=document.getElementById('glbl');
+  for(let i=1;i<=18;i++){const d=document.createElement('div');d.textContent=i;glbl.appendChild(d);}
+  
   const pt=document.getElementById('ptable');
+  // Добавляем плейсхолдеры для лантаноидов и актиноидов (ряды 6 и 7)
+  const lanthPlaceholder = document.createElement('div');
+  lanthPlaceholder.className = 'el lanth-placeholder';
+  lanthPlaceholder.style.gridColumn = '3';
+  lanthPlaceholder.style.gridRow = '6';
+  lanthPlaceholder.innerHTML = '<span style="font-size:9px">57-71</span>';
+  lanthPlaceholder.title = 'Лантаноиды (см. ряд ниже)';
+  pt.appendChild(lanthPlaceholder);
+
+  const actPlaceholder = document.createElement('div');
+  actPlaceholder.className = 'el act-placeholder';
+  actPlaceholder.style.gridColumn = '3';
+  actPlaceholder.style.gridRow = '7';
+  actPlaceholder.innerHTML = '<span style="font-size:9px">89-103</span>';
+  actPlaceholder.title = 'Актиноиды (см. ряд ниже)';
+  pt.appendChild(actPlaceholder);
+
   EL.forEach(e=>{
     const d=document.createElement('div');d.className='el c-'+e.cat;
+    // Если это La-Lu или Ac-Lr, они уже стоят на своих местах (per 9 и 10)
     d.style.gridColumn=e.grp;d.style.gridRow=e.per;d.dataset.sym=e.sym; d.draggable = true;
     d.ondragstart = (ev) => ev.dataTransfer.setData('text/plain', JSON.stringify({type:'element', el:e}));
     d.innerHTML=`<span class="z">${e.z}</span><span class="sy">${e.sym}</span><span class="nm">${e.name}</span>`;
@@ -1127,7 +1144,6 @@ function mix(isDrip = false){
   log('✓ '+describe(SLOTS[0])+' + '+describe(SLOTS[1])+' → '+res.type);
 }
 
-// Drag & Drop
 function dragOver(ev, idx) { ev.preventDefault(); document.getElementById('s'+(idx+1)).classList.add('drag-over'); }
 function dragLeave(ev) { ev.currentTarget.classList.remove('drag-over'); }
 function drop(ev, idx) {
@@ -1136,9 +1152,10 @@ function drop(ev, idx) {
   render();
 }
 
-/* ================= СТАРТ ================= */
 document.getElementById('filter').addEventListener('input',rebuildCombo);
 rebuildCombo();render();
 </script>
 </body>
 </html>
+```
+

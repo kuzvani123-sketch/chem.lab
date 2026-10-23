@@ -78,7 +78,6 @@ button:active{transform:scale(0.98);}
 .btn-tool.danger{background:linear-gradient(135deg, #da3633, #f85149);box-shadow:0 4px 15px rgba(218,54,51,0.3)}
 .btn-tool.danger:hover{background:linear-gradient(135deg, #f85149, #ff7b72)}
 
-/* 🔗 ЦЕПОЧКИ — активная кнопка режима */
 #btnChainMode.active{
   background: linear-gradient(135deg, #8957e5, #a371f7) !important;
   box-shadow: 0 0 18px rgba(163, 113, 247, 0.5) !important;
@@ -193,7 +192,6 @@ select:focus{outline:none;border-color:#58a6ff}
 .err{color:#f85149;font-weight:600}
 sub{font-size:.65em;vertical-align:-.25em}
 
-/* 🔗 ЦЕПОЧКИ — статус-бар под сценой */
 .chain-status{
   background: rgba(22, 27, 34, 0.8);
   border: 1px solid #30363d;
@@ -341,7 +339,6 @@ sub{font-size:.65em;vertical-align:-.25em}
       </div>
     </div>
 
-    <!-- 🔗 ЦЕПОЧКИ: статус-бар содержимого колбы -->
     <div class="chain-status" id="beakerStatus" style="display:none;">
       <span class="chain-label">В колбе:</span>
       <span id="chainContents"><span style="color:#8b949e; font-style:italic;">пусто — добавьте первый реактив</span></span>
@@ -398,7 +395,6 @@ const FLAME_COLORS={Li:'220,50,50',Na:'255,220,50',K:'180,100,255',Rb:'200,50,50
 
 const METALS_ACTIVITY = ['Li', 'K', 'Ba', 'Ca', 'Na', 'Mg', 'Al', 'Mn', 'Zn', 'Cr', 'Fe', 'Ni', 'Sn', 'Pb', 'H', 'Cu', 'Hg', 'Ag', 'Pt', 'Au'];
 
-/* 🔗 ЦЕПОЧКИ: набор газов — они улетают из колбы */
 const GAS_PRODUCTS = new Set(['H2','CO2','SO2','NH3','H2S','Cl2','NO2','NO','O2','Br2','N2','F2','I2']);
 
 const PH_COLORS = {
@@ -409,6 +405,7 @@ const PH_COLORS = {
   7: { color: '#3fb950', text: 'Нейтральная', val: '7.0' },
   8: { color: '#2a9aff', text: 'Слабощелочная', val: '8.0' },
   11: { color: '#58a6ff', text: 'Щелочная', val: '11.0' },
+  12: { color: '#58a6ff', text: 'Щелочная', val: '12.0' },
   14: { color: '#8957e5', text: 'Сильнощелочная', val: '14.0' }
 };
 
@@ -450,12 +447,11 @@ function solubility(cat,an){
   return alk.includes(cat)?'s':'i';
 }
 
-const GAS={CO2:{h:'CO<sub>2</sub>',p:'CO2',obs:'выделяется газ без цвета и запаха'},SO2:{h:'SO<sub>2</sub>',p:'SO2',obs:'выделяется газ с резким запахом'},H2S:{h:'H<sub>2</sub>S',p:'H2S',obs:'выделяется газ с запахом тухлых яиц'},NH3:{h:'NH<sub>3</sub>',p:'NH3',obs:'выделяется газ с резким запахом (при нагревании)'},H2:{h:'H<sub>2</sub>',p:'H2',obs:'выделяется бесцветный газ'},Cl2:{h:'Cl<sub>2</sub>',p:'Cl2',obs:'выделяется желто-зеленый газ'},NO2:{h:'NO<sub>2</sub>',p:'NO2',obs:'выделяется бурый газ'},NO:{h:'NO',p:'NO',obs:'выделяется бесцветный газ (быстро буреет на воздухе)'},O2:{h:'O<sub>2</sub>',p:'O2',obs:'выделяется бесцветный газ, поддерживающий горение'},Br2:{h:'Br<sub>2</sub>',p:'Br2',obs:'выделяются бурые пары'}};
+const GAS={CO2:{h:'CO<sub>2</sub>',p:'CO2',obs:'выделяется газ без цвета и запаха'},SO2:{h:'SO<sub>2</sub>',p:'SO2',obs:'выделяется газ с резким запахом'},H2S:{h:'H<sub>2</sub>S',p:'H2S',obs:'выделяется газ с запахом тухлых яиц'},NH3:{h:'NH<sub>3</sub>',p:'NH3',obs:'выделяется газ с резким запахом'},H2:{h:'H<sub>2</sub>',p:'H2',obs:'выделяется бесцветный газ'},Cl2:{h:'Cl<sub>2</sub>',p:'Cl2',obs:'выделяется желто-зеленый газ'},NO2:{h:'NO<sub>2</sub>',p:'NO2',obs:'выделяется бурый газ'},NO:{h:'NO',p:'NO',obs:'выделяется бесцветный газ (быстро буреет на воздухе)'},O2:{h:'O<sub>2</sub>',p:'O2',obs:'выделяется бесцветный газ, поддерживающий горение'},Br2:{h:'Br<sub>2</sub>',p:'Br2',obs:'выделяются бурые пары'}};
 function classify(cat,an){
   if(cat==='H'&&an==='OH')return{kind:'water'};
   if(cat==='NH4'&&an==='OH'){
-    if (typeof ANIM !== 'undefined' && ANIM.heating) return{kind:'gas',gas:'NH3',water:true};
-    return{kind:'soluble',obs:'раствор с резким запахом нашатырного спирта'};
+    return{kind:'gas',gas:'NH3',water:true};
   }
   if(cat==='H'){
     if(an==='CO3'||an==='HCO3')return{kind:'gas',gas:'CO2',water:true};
@@ -509,7 +505,13 @@ function buildCompounds(){
 const COMPOUNDS=buildCompounds();
 const DIATOMIC=new Set(['H','N','O','F','Cl','Br','I']);
 const elementFormula=s=>DIATOMIC.has(s)?s+'<sub>2</sub>':s;
-function findMetalCat(sym,val){for(const[id,c]of Object.entries(CATIONS))if((c.el===sym || id===sym) && c.q===val)return id;return null;}
+function findMetalCat(sym,val){
+  if (CATIONS[sym] && CATIONS[sym].q === val) return sym;
+  for(const [id,c] of Object.entries(CATIONS)){
+    if(c.el === sym && c.q === val) return id;
+  }
+  return null;
+}
 
 function compParts(R){
   if(R.k==='acid')return{cat:'H',an:R.an,html:R.f,plain:fPlain('H',R.an)};
@@ -619,45 +621,111 @@ function acidOxideWater(O){
          reason:'Кислотный оксид растворяется в воде с образованием кислоты.'};
 }
 
-function reactElementAcid(elSym,comp){
-  if(!E_STD.hasOwnProperty(elSym)||E_STD[elSym]>=0)return null;
-  if(comp.isConc){
-    if(comp.an==='NO3'){
-      if(['Fe','Al'].includes(elSym)) {
-        if (currentTemperature < 60.0) {
-          return {success:false, type:'Пассивация', left:[{c:1,h:elSym},{c:1,h:comp.f}], reason:`<b>Реакция не идет.</b> При обычной температуре (${currentTemperature.toFixed(0)}°C) концентрированная азотная кислота пассивирует металл. Включите горелку и подождите нагрева!`};
-        } else {
-          return {success:true, type:'ОВР (при нагревании)', env:'aqueous', left:[{c:1,h:elSym},{c:6,h:comp.f}], right:[{c:1,h:`${elSym}(NO<sub>3</sub>)<sub>3</sub>`,cat:elSym==='Fe'?'Fe3':'Al',an:'NO3'},{c:3,h:'NO<sub>2</sub>↑',obs:'выделяется бурый газ'},{c:3,h:'H<sub>2</sub>O'}], exothermic:true, reason:`<b>Реакция идет бурно при нагревании (${currentTemperature.toFixed(0)}°C).</b> Защитная пленка разрушена. Азотная кислота окисляет металл с выделением бурого газа NO₂.`};
+function reactElementAcid(elSym, comp){
+  if (!E_STD.hasOwnProperty(elSym)) return null;
+
+  const isOxidizing = comp.an === 'NO3' || (comp.isConc && comp.an === 'SO4');
+  if (E_STD[elSym] >= 0 && !isOxidizing) return null;
+
+  if (comp.isConc) {
+    if (comp.an === 'NO3') {
+      if (['Fe','Al'].includes(elSym)) {
+        if (!isBurnerOn) {
+          return { success:false, type:'Пассивация', left:[{c:1,h:elSym},{c:1,h:comp.f}],
+            reason:`<b>Реакция не идет.</b> При обычной температуре концентрированная азотная кислота пассивирует металл. Включите горелку и подождите нагрева!`};
         }
+        const cat = elSym === 'Fe' ? 'Fe3' : 'Al';
+        return { success:true, type:'ОВР (при нагревании)', env:'aqueous',
+          left:[{c:1,h:elSym},{c:6,h:comp.f}],
+          right:[
+            {c:1,h:fHTML(cat,'NO3'),cat,an:'NO3'},
+            {c:3,h:'NO<sub>2</sub>↑',obs:'выделяется бурый газ'},
+            {c:3,h:'H<sub>2</sub>O'}
+          ],
+          exothermic:true,
+          reason:'При нагревании защитная пленка разрушается. Азотная кислота окисляет металл с выделением бурого газа NO₂.'};
       }
-      if(elSym==='Cu') return {success:true, type:'ОВР (Cu + HNO3 конц)', env:'aqueous', left:[{c:1,h:'Cu'},{c:4,h:'HNO<sub>3</sub> (конц)'}], right:[{c:1,h:'Cu(NO<sub>3</sub>)<sub>2</sub>',cat:'Cu2',an:'NO3'},{c:2,h:'NO<sub>2</sub>↑',obs:'выделяется бурый газ'},{c:2,h:'H<sub>2</sub>O'}], exothermic:true, reason:'Азотная кислота окисляет медь с выделением бурого газа NO2.'};
-      return {success:true, type:'ОВР (Металл + HNO3 конц)', env:'aqueous', left:[{c:1,h:elSym},{c:2,h:comp.f}], right:[{c:1,h:`${elSym}(NO<sub>3</sub>)<sub>2</sub>`},{c:1,h:'NO<sub>2</sub>↑',obs:'выделяется бурый газ'},{c:1,h:'H<sub>2</sub>O'}], exothermic:true, reason:'Азотная кислота окисляет металл с выделением бурого газа NO2.'};
+      const z = M_VAL[elSym];
+      if (!z) return null;
+      const cat = findMetalCat(elSym, z);
+      if (!cat) return null;
+      return { success:true, type:'ОВР (Металл + HNO3 конц)', env:'aqueous',
+        left:[{c:1,h:elSym},{c:2*z,h:comp.f}],
+        right:[
+          {c:1,h:fHTML(cat,'NO3'),cat,an:'NO3'},
+          {c:z,h:'NO<sub>2</sub>↑',obs:'выделяется бурый газ'},
+          {c:z,h:'H<sub>2</sub>O'}
+        ],
+        exothermic:true,
+        reason:'Азотная кислота окисляет металл с выделением бурого газа NO₂.'};
     }
-    if(comp.an==='SO4'){
-      if(['Fe','Al'].includes(elSym)) {
-        if (currentTemperature < 60.0) {
-          return {success:false, type:'Пассивация', left:[{c:1,h:elSym},{c:1,h:comp.f}], reason:`<b>Реакция не идет.</b> При обычной температуре (${currentTemperature.toFixed(0)}°C) концентрированная серная кислота пассивирует металл. Включите горелку!`};
-        } else {
-          const cat = (elSym === 'Fe') ? 'Fe3' : 'Al';
-          return {success:true, type:'ОВР (при нагревании)', env:'aqueous',
-            left:[{c:2,h:elSym},{c:6,h:comp.f}],
-            right:[
-              {c:1,h:fHTML(cat,'SO4'), cat:cat, an:'SO4'},
-              {c:3,h:'SO<sub>2</sub>↑', obs:'выделяется газ с резким запахом'},
-              {c:6,h:'H<sub>2</sub>O'}
-            ],
-            exothermic:true, reason:`<b>Реакция идет при нагревании.</b> Выделяется сернистый газ.`};
+    if (comp.an === 'SO4') {
+      if (['Fe','Al'].includes(elSym)) {
+        if (!isBurnerOn) {
+          return { success:false, type:'Пассивация', left:[{c:1,h:elSym},{c:1,h:comp.f}],
+            reason:`<b>Реакция не идет.</b> При обычной температуре концентрированная серная кислота пассивирует металл. Включите горелку!`};
         }
+        const cat = elSym === 'Fe' ? 'Fe3' : 'Al';
+        return { success:true, type:'ОВР (при нагревании)', env:'aqueous',
+          left:[{c:2,h:elSym},{c:6,h:comp.f}],
+          right:[
+            {c:1,h:fHTML(cat,'SO4'), cat, an:'SO4'},
+            {c:3,h:'SO<sub>2</sub>↑', obs:'выделяется газ с резким запахом'},
+            {c:6,h:'H<sub>2</sub>O'}
+          ],
+          exothermic:true,
+          reason:'<b>Реакция идет при нагревании.</b> Выделяется сернистый газ.'};
       }
-      if(elSym==='Cu') return {success:true, type:'ОВР (Cu + H2SO4 конц)', env:'aqueous', left:[{c:1,h:'Cu'},{c:2,h:'H<sub>2</sub>SO<sub>4</sub> (конц)'}], right:[{c:1,h:'CuSO<sub>4</sub>',cat:'Cu2',an:'SO4'},{c:1,h:'SO<sub>2</sub>↑',obs:'выделяется газ с резким запахом'},{c:2,h:'H<sub>2</sub>O'}], exothermic:true, reason:'Серная кислота окисляет медь с выделением SO2.'};
-      return {success:true, type:'ОВР (Металл + H2SO4 конц)', env:'aqueous', left:[{c:1,h:elSym},{c:2,h:comp.f}], right:[{c:1,h:fHTML(findMetalCat(elSym,M_VAL[elSym]),'SO4'),cat:findMetalCat(elSym,M_VAL[elSym]),an:'SO4'},{c:1,h:'SO<sub>2</sub>↑',obs:'выделяется газ с резким запахом'},{c:2,h:'H<sub>2</sub>O'}], exothermic:true, reason:'Серная кислота окисляет металл с выделением SO2.'};
+      const z = M_VAL[elSym];
+      if (!z) return null;
+      const cat = findMetalCat(elSym, z);
+      if (!cat) return null;
+      const isOddZ = z % 2 !== 0;
+      const mM = isOddZ ? 2 : 1;
+      const mH2SO4 = isOddZ ? 2*z : z;
+      const mSO2 = isOddZ ? z : z/2;
+      const mH2O = isOddZ ? 2*z : z;
+      return { success:true, type:'ОВР (Металл + H2SO4 конц)', env:'aqueous',
+        left:[{c:mM,h:elementFormula(elSym)},{c:mH2SO4,h:comp.f}],
+        right:[
+          {c:1,h:fHTML(cat,'SO4'),cat,an:'SO4'},
+          {c:mSO2,h:'SO<sub>2</sub>↑',obs:'выделяется газ с резким запахом'},
+          {c:mH2O,h:'H<sub>2</sub>O'}
+        ],
+        exothermic:true,
+        reason:'Серная кислота окисляет металл с выделением SO₂.'};
     }
   }
-  if(comp.an==='NO3'){
-    if(elSym==='Cu') return {success:true, type:'ОВР (Cu + HNO3 разб)', env:'aqueous', left:[{c:3,h:'Cu'},{c:8,h:'HNO<sub>3</sub> (разб)'}], right:[{c:3,h:'Cu(NO<sub>3</sub>)<sub>2</sub>',cat:'Cu2',an:'NO3'},{c:2,h:'NO↑',obs:'выделяется бесцветный газ'},{c:4,h:'H<sub>2</sub>O'}], exothermic:true, reason:'Азотная кислота окисляет медь с выделением NO.'};
-    if(elSym==='Fe') return {success:true, type:'ОВР (Fe + HNO3 разб)', env:'aqueous', left:[{c:1,h:'Fe'},{c:4,h:'HNO<sub>3</sub> (разб)'}], right:[{c:1,h:'Fe(NO<sub>3</sub>)<sub>3</sub>',cat:'Fe3',an:'NO3'},{c:1,h:'NO↑',obs:'выделяется бесцветный газ'},{c:2,h:'H<sub>2</sub>O'}], exothermic:true, reason:'Железо окисляется азотной кислотой с образованием нитрата железа(III) и NO.'};
-    return {success:false, type:'Реакция с HNO3', left:[{c:1,h:elSym},{c:1,h:comp.f}], reason:'HNO₃ окисляет металлы за счёт азота, продукт зависит от концентрации.'};
+
+  if (comp.an === 'NO3') {
+    if (elSym === 'Cu') return {success:true, type:'ОВР (Cu + HNO3 разб)', env:'aqueous',
+      left:[{c:3,h:'Cu'},{c:8,h:comp.f}],
+      right:[{c:3,h:'Cu(NO<sub>3</sub>)<sub>2</sub>',cat:'Cu2',an:'NO3'},{c:2,h:'NO↑',obs:'выделяется бесцветный газ'},{c:4,h:'H<sub>2</sub>O'}],
+      exothermic:true, reason:'Азотная кислота окисляет медь с выделением NO.'};
+    if (elSym === 'Fe') return {success:true, type:'ОВР (Fe + HNO3 разб)', env:'aqueous',
+      left:[{c:1,h:'Fe'},{c:4,h:comp.f}],
+      right:[{c:1,h:'Fe(NO<sub>3</sub>)<sub>3</sub>',cat:'Fe3',an:'NO3'},{c:1,h:'NO↑',obs:'выделяется бесцветный газ'},{c:2,h:'H<sub>2</sub>O'}],
+      exothermic:true, reason:'Железо окисляется азотной кислотой с образованием нитрата железа(III) и NO.'};
+    const z = M_VAL[elSym];
+    if (!z) return null;
+    const cat = findMetalCat(elSym, z);
+    if (!cat) return null;
+    const g = lcm(z, 3);
+    const mM = g/z;
+    const mNO = g/3;
+    const mHNO3 = mM*z + mNO;
+    const mH2O = 2*mNO;
+    return { success:true, type:'ОВР (Металл + HNO3 разб)', env:'aqueous',
+      left:[{c:mM,h:elementFormula(elSym)},{c:mHNO3,h:comp.f}],
+      right:[
+        {c:mM,h:fHTML(cat,'NO3'),cat,an:'NO3'},
+        {c:mNO,h:'NO↑',obs:'выделяется бесцветный газ'},
+        {c:mH2O,h:'H<sub>2</sub>O'}
+      ],
+      exothermic:true,
+      reason:'Азотная кислота окисляет металл с выделением NO.'};
   }
+
   const z=M_VAL[elSym];if(!z)return null;
   const a=ANIONS[comp.an].q,g=gcd(z,a),nC=a/g,nA=z/g;
   let u=1;while(!isInt(nA*u*a/2))u++;
@@ -680,11 +748,11 @@ function reactElementSalt(elSym,comp){
   const a=ANIONS[comp.an].q,g1=gcd(z1,a),g2=gcd(z2,a);
   const n1=a/g1,m1=z1/g1,n2=a/g2,m2=z2/g2;
   const g=gcd(m1,m2),u=m2/g,y=m1/g,x=u*n1,v=y*n2,cat1=findMetalCat(elSym,z1);
-  return{success:true, type:'Металл + соль',env:'aqueous',left:[{c:x,h:elementFormula(elSym)},{c:y,h:comp.f}],right:[{c:u,h:fHTML(cat1,comp.an),cat:cat1,an:comp.an},{c:v,h:elementFormula(catEl)}], reason:'Более активный металл вытесняет менее активный из раствора его соли.'};
+  return{success:true, type:'Металл + соль',env:'aqueous',left:[{c:x,h:elementFormula(elSym)},{c:y,h:comp.f}],right:[{c:u,h:fHTML(cat1,comp.an),cat:cat1,an:comp.an},{c:v,h:elementFormula(catEl),p:catEl}], reason:'Более активный металл вытесняет менее активный из раствора его соли.'};
 }
 function reactHalogenDisplace(X,salt){
   if(!HAL_E[X]||!HAL_E[salt.an]||HAL_E[X]<=HAL_E[salt.an])return null;
-  return{success:true, type:'Галоген + соль',env:'aqueous',left:[{c:1,h:elementFormula(X)},{c:2,h:salt.f}],right:[{c:2,h:fHTML(salt.cat,X),cat:salt.cat,an:X},{c:1,h:elementFormula(salt.an)}], reason:'Более активный галоген вытесняет менее активный из его соли.'};
+  return{success:true, type:'Галоген + соль',env:'aqueous',left:[{c:1,h:elementFormula(X)},{c:2,h:salt.f}],right:[{c:2,h:fHTML(salt.cat,X),cat:salt.cat,an:X},{c:1,h:elementFormula(salt.an),p:salt.an}], reason:'Более активный галоген вытесняет менее активный из его соли.'};
 }
 function reactMetalNitride(M){
   const z=M_VAL[M.sym];if(!z)return null;
@@ -856,18 +924,17 @@ function updateThermometer(targetTemp) {
     tempValEl.textContent = currentTemperature.toFixed(1);
     if (currentTemperature >= 80) {
       tempValEl.style.color = '#ff2a2a';
-      if (steamLayer) steamLayer.style.display = 'block';
     } else if (currentTemperature >= 45) {
       tempValEl.style.color = '#f0883e';
-      if (steamLayer) steamLayer.style.display = 'none';
     } else {
       tempValEl.style.color = '#ff7a2a';
-      if (steamLayer) steamLayer.style.display = 'none';
+    }
+    if (steamLayer) {
+      steamLayer.style.display = (currentTemperature >= 80 || ANIM.steam) ? 'block' : 'none';
     }
   }, 15);
 }
 
-/* 🔗 ЦЕПОЧКИ: логика нагрева в режиме цепочек */
 function toggleHeat(){
   initAudio(); 
   isBurnerOn = !isBurnerOn;
@@ -882,7 +949,6 @@ function toggleHeat(){
   } else {
     updateThermometer(20.0);
   }
-  // 🔗 ЦЕПОЧКИ: если режим цепочек — применяем нагрев к содержимому колбы
   if (CHAIN_MODE) {
     if (isBurnerOn) heatChainContents();
   } else if (SLOTS[0] && SLOTS[1]) {
@@ -912,7 +978,6 @@ function updatePH(products = null) {
     isBase = products.right.some(p => p.h.includes('NaOH') || p.h.includes('KOH') || p.h.includes('Ca(OH)<sub>2</sub>') || p.h.includes('Ba(OH)<sub>2</sub>'));
   } else {
     SLOTS.forEach(checkSubstance);
-    // 🔗 ЦЕПОЧКИ: учитываем содержимое колбы
     if (CHAIN_MODE) chainContents.forEach(checkSubstance);
   }
   if(isAcid && !isBase) ph = 2;
@@ -938,7 +1003,6 @@ function updatePH(products = null) {
   }
 }
 
-/* 🔗 ЦЕПОЧКИ: главная точка входа */
 function mix(isRecalc = false) {
   if (CHAIN_MODE) { chainStep(); return; }
   if (!SLOTS[0] || !SLOTS[1]) {
@@ -947,7 +1011,6 @@ function mix(isRecalc = false) {
   }
   if (!isRecalc) resetLab();
 
-  // === СЕЛЕКТИВНОЕ РАСТВОРЕНИЕ ===
   let elems = SLOTS.filter(s => s && s.type === 'element');
   let acids = SLOTS.filter(s => s && s.type === 'compound' && s.comp.k === 'acid');
   if (elems.length === 2 && acids.length === 1) {
@@ -1048,7 +1111,6 @@ function mix(isRecalc = false) {
   showResult(html);
 }
 
-/* 🔗 ЦЕПОЧКИ: разложение при нагревании — общая функция */
 function applyHeatingDecomposition(rightTerms) {
   let newRight = [];
   let decomposed = false;
@@ -1080,7 +1142,6 @@ function applyHeatingDecomposition(rightTerms) {
   return { newRight, decomposed };
 }
 
-/* 🔗 ЦЕПОЧКИ: разложение содержимого колбы при нагревании */
 function heatChainContents() {
   if (chainContents.length === 0) return;
   let changed = false;
@@ -1122,12 +1183,10 @@ function heatChainContents() {
   }
 }
 
-/* 🔗 ЦЕПОЧКИ: глобальное состояние */
 let CHAIN_MODE = false;
 let chainContents = [];
 let chainHistory = [];
 
-/* 🔗 ЦЕПОЧКИ: переключение режима */
 function toggleChainMode() {
   CHAIN_MODE = !CHAIN_MODE;
   const btn = document.getElementById('btnChainMode');
@@ -1160,7 +1219,6 @@ function toggleChainMode() {
   }
 }
 
-/* 🔗 ЦЕПОЧКИ: сброс */
 function resetChain() {
   chainContents = [];
   chainHistory = [];
@@ -1171,7 +1229,6 @@ function resetChain() {
   log('🔗 Цепочка сброшена');
 }
 
-/* 🔗 ЦЕПОЧКИ: отрисовка статуса */
 function renderChainStatus() {
   const container = document.getElementById('chainContents');
   if (!container) return;
@@ -1188,9 +1245,7 @@ function renderChainStatus() {
   container.innerHTML = parts.join('<span class="chain-plus">+</span>');
 }
 
-/* 🔗 ЦЕПОЧКИ: главный шаг — добавить реагент в колбу */
 function chainStep() {
-  // Ищем первый заполненный слот
   let slotIndex = -1;
   let newReagent = null;
   for (let i = 0; i < SLOTS.length; i++) {
@@ -1205,7 +1260,6 @@ function chainStep() {
     ? newReagent.el.sym
     : newReagent.comp.f.replace(/<\/?sub>/g, '');
 
-  // === СТАРТ ЦЕПОЧКИ ===
   if (chainContents.length === 0) {
     chainContents.push(newReagent);
     chainHistory.push(newName);
@@ -1222,7 +1276,6 @@ function chainStep() {
     return;
   }
 
-  // === ИЩЕМ РЕАКЦИЮ ===
   let reaction = null;
   let reactedIdx = -1;
   for (let i = 0; i < chainContents.length; i++) {
@@ -1236,7 +1289,6 @@ function chainStep() {
   }
 
   if (reaction) {
-    // Термическое разложение при включённой горелке
     if (ANIM.heating && reaction.right) {
       const { newRight, decomposed } = applyHeatingDecomposition(reaction.right);
       if (decomposed) {
@@ -1246,20 +1298,16 @@ function chainStep() {
       }
     }
 
-    // Удаляем прореагировавшее вещество из колбы
     chainContents.splice(reactedIdx, 1);
 
-    // Добавляем продукты (кроме газов и воды)
     const newProducts = reaction.right
       .filter(p => p && p.p !== 'H2O' && !GAS_PRODUCTS.has(p.p))
       .map(convertProdToSlotFormat)
       .filter(Boolean);
     chainContents.push(...newProducts);
 
-    // Визуализация
     playReactionChain(reaction);
 
-    // Вывод результата
     const eq = sideHTML(reaction.left) + ' → ' + sideHTML(reaction.right);
     let html = `<div class="tag" style="background:rgba(163,113,247,0.15); color:#a371f7; border-color:rgba(163,113,247,0.35);">🔗 Шаг цепочки — ${reaction.type}</div>`;
     html += `<div class="eq">${eq}</div>`;
@@ -1270,7 +1318,6 @@ function chainStep() {
     log('🔗 ' + eq);
     chainHistory.push(eq);
   } else {
-    // === БЕЗ РЕАКЦИИ ===
     chainContents.push(newReagent);
     chainHistory.push(newName);
     showResult(`<div class="tag" style="background:rgba(218,54,51,0.15); color:#f85149; border-color:rgba(218,54,51,0.35);">Смешивание без реакции</div><div class="eq">${newName} добавлен в колбу</div><div class="obs">Новый реактив не вступил в реакцию ни с одним из веществ в колбе. Теперь там смесь веществ. Попробуйте добавить что-то другое, что может прореагировать с одним из них.</div>`);
@@ -1278,24 +1325,20 @@ function chainStep() {
     renderSolidChunks();
   }
 
-  // Сбрасываем слот
   SLOTS[slotIndex] = null;
   render();
   renderChainStatus();
   updatePH();
 }
 
-/* 🔗 ЦЕПОЧКИ: анимация реакции в режиме цепочек (без полного сброса) */
 function playReactionChain(res) {
   initAudio();
   stopBubbles(); stopFire();
   const env = res.env || 'aqueous';
 
-  // Жидкость и цвет
   const level = Math.min(80, chainContents.length * 20 + 20);
   setLiquidLevel(level);
 
-  // Осадок
   const precip = res.right.find(t => t.precip);
   if (precip) {
     startPrecipitate(PRECIP_RGB[PRECIP_COLOR[precip.p]] || '200,200,200');
@@ -1305,7 +1348,6 @@ function playReactionChain(res) {
     if (solColor) setLiquidColor(solColor);
   }
 
-  // Газ
   const gasTerm = res.right.find(t => t.obs && (t.obs.includes('газ') || t.obs.includes('пары')));
   if (gasTerm) {
     const gColor = GAS_COLORS[gasTerm.p] || '255,255,255';
@@ -1313,17 +1355,13 @@ function playReactionChain(res) {
     setTimeout(stopBubbles, 3000);
   }
 
-  // Пар при разложении
   if (res.type && res.type.includes('разложение')) {
     startSteam(1.5);
     setTimeout(stopSteam, 3500);
   }
 
-  // Встряска + чанки
   flashBeaker();
   renderSolidChunks();
-
-  // pH
   updatePH(res);
 }
 
@@ -1335,9 +1373,9 @@ function convertProdToSlotFormat(prod) {
   if (prod.p === 'NH3') return {type: 'compound', comp: {k:'base', cat:'NH4', f:'NH<sub>3</sub>·H<sub>2</sub>O', n:'аммиачная вода'}};
   if (prod.p === 'H2S') return {type: 'compound', comp: {k:'acid', an:'S', f:'H<sub>2</sub>S', n:'сероводородная кислота'}};
   
-  if (prod.p === 'H2') return {type: 'element', el: {sym:'H', name:'Водород', z:1}};
-  if (['Cu','Fe','Zn','Ag','Pb','Mg','Al','Na','Ca'].includes(prod.p)) {
-    return {type: 'element', el: {sym:prod.p, name:prod.p, z: 0}};
+  if (prod.p === 'H2') {
+    const H = EL.find(e => e.sym === 'H');
+    return {type: 'element', el: H};
   }
 
   if (prod.p === 'CuO') return {type: 'compound', comp: {id:'oxB_Cu2', k:'oxB', cat:'Cu2', nOx:1, f:'CuO', n:'оксид меди(II)'}};
@@ -1346,13 +1384,18 @@ function convertProdToSlotFormat(prod) {
   if (prod.p === 'Al2O3') return {type: 'compound', comp: {id:'oxB_Al', k:'oxB', cat:'Al', nOx:2, f:'Al<sub>2</sub>O<sub>3</sub>', n:'оксид алюминия'}};
   if (prod.p === 'SiO2') return {type: 'compound', comp: {k:'oxA', an:'SiO3', nOx:1, f:'SiO<sub>2</sub>', n:'оксид кремния(IV)'}};
 
-  // 🔗 ЦЕПОЧКИ: структурированный oxB из реакций горения
   if (prod.kind === 'oxB' && prod.cat && prod.nOx) {
     return {type: 'compound', comp: {k:'oxB', cat:prod.cat, nOx:prod.nOx, f:prod.h, n:'оксид ' + CATION_GEN[prod.cat]}};
   }
   
   if (prod.p === 'Li3N') return {type: 'compound', comp: {k:'salt', cat:'Li', an:'N3', f:'Li<sub>3</sub>N', n:'нитрид лития'}};
   if (prod.p === 'Mg3N2') return {type: 'compound', comp: {k:'salt', cat:'Mg', an:'N3', f:'Mg<sub>3</sub>N<sub>2</sub>', n:'нитрид магния'}};
+
+  // Вытесненный элемент (металл или галоген)
+  const elMatch = EL.find(e => e.sym === prod.p);
+  if (elMatch) {
+    return {type: 'element', el: elMatch};
+  }
 
   if (prod.cat && prod.an) {
     let kind = 'salt';
@@ -1399,9 +1442,8 @@ let REPORT_LOGS = [];
 function getVesselEl(id) { const isFlask = document.getElementById('flask').classList.contains('on'); return document.getElementById(isFlask ? id+'Flask' : id); }
 function setLiquidColor(rgb){
   const liq=getVesselEl('liquid'); if(!liq) return;
-  if(ANIM.indicator==='phenolphthalein' && rgb) { liq.style.background=`linear-gradient(180deg,rgba(200,0,100,0.5),rgba(200,0,100,0.8))`; }
-  else if(ANIM.indicator==='litmus' && rgb) { liq.style.background=`linear-gradient(180deg,rgba(200,0,0,0.5),rgba(200,0,0,0.8))`; }
-  else if(rgb) { liq.style.background=`linear-gradient(180deg,rgba(${rgb},0.4),rgba(${rgb},0.8))`; }
+  if (ANIM.indicator) return; // цветом управляет updatePH
+  if(rgb) { liq.style.background=`linear-gradient(180deg,rgba(${rgb},0.4),rgba(${rgb},0.8))`; }
   else { liq.style.background=`linear-gradient(180deg,rgba(180,200,220,0.2),rgba(180,200,220,0.5))`; }
 }
 function setLiquidLevel(pct){ const liq=getVesselEl('liquid'); if(liq) liq.style.height=pct+'%'; }
@@ -1450,13 +1492,18 @@ function spawnSteam(){
 }
 function startSteam(intensity = 1){
   stopSteam();
+  const layer = document.getElementById('steamLayer');
+  if (layer) layer.style.display = 'block';
   ANIM.steam = setInterval(spawnSteam, Math.max(80, 160 / intensity));
 }
 function stopSteam(){
   if(ANIM.steam) clearInterval(ANIM.steam);
   ANIM.steam = null;
   const l = document.getElementById('steamLayer');
-  if(l) l.innerHTML = '';
+  if(l) {
+    l.innerHTML = '';
+    if (currentTemperature < 80) l.style.display = 'none';
+  }
 }
 
 function spawnPrecipParticle(rgb){
@@ -1478,7 +1525,6 @@ function stopPrecipitate(){if(ANIM.precip)clearInterval(ANIM.precip);ANIM.precip
 
 function flashBeaker(){const b=document.getElementById('beaker');b.classList.add('shaking');setTimeout(()=>b.classList.remove('shaking'),520);}
 
-/* 🔗 ЦЕПОЧКИ: в режиме цепочек рендерим содержимое колбы + слоты */
 function renderSolidChunks(){
   ['solidLayer','solidLayerFlask'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});
   const isFlask = document.getElementById('flask').classList.contains('on');
@@ -1521,6 +1567,8 @@ function clearSolidChunks(){['solidLayer','solidLayerFlask'].forEach(id=>{const 
 function resetLab(preserveIndicator = true){
   stopBubbles(); stopFire(); stopSteam(); stopPrecipitate(); clearSolidChunks();
   setLiquidLevel(0); setLiquidColor(null); ANIM.drops = 0;
+  const flaskOn = document.getElementById('flask').classList.contains('on');
+  document.getElementById('beakerWrap').style.display = flaskOn ? 'none' : 'block';
   if (!preserveIndicator) {
     ANIM.indicator = null;
     document.getElementById('indicatorDisplay').style.display = 'none';
@@ -1549,7 +1597,11 @@ function runFlameTest() {
   flame.classList.add('on'); flame.style.opacity = '1'; flame.style.boxShadow = `0 0 30px rgb(${color})`;
   showResult(`<div class="tag">Окрашивание пламени</div>Ион ${metal} окрашивает пламя в характерный цвет.`);
   setTimeout(() => {
-    flame.classList.remove('on'); flame.style.background = ''; flame.style.opacity = '0'; flame.style.boxShadow = '0 0 20px #ff5500';
+    flame.style.background = ''; flame.style.boxShadow = '0 0 20px #ff5500';
+    if (!isBurnerOn) {
+      flame.classList.remove('on');
+      flame.style.opacity = '0';
+    }
   }, 3000);
 }
 
@@ -1596,7 +1648,8 @@ function playReaction(res, isDrip) {
   initAudio();
   const env = res.env || 'aqueous';
   if(env==='combustion'){
-    document.getElementById('beakerWrap').style.display='none'; document.getElementById('flask').classList.remove('on');
+    document.getElementById('flask').classList.remove('on');
+    document.getElementById('beakerWrap').style.display='block';
   } else {
     if(document.getElementById('flask').classList.contains('on')) {
       document.getElementById('flask').classList.add('on'); document.getElementById('beakerWrap').style.display='none';
@@ -1663,7 +1716,12 @@ function addThirdReagent() {
 
 function getReagentState(slot){
   if(!slot)return null;
-  if(slot.type==='element'){ const sym=slot.el.sym;if(['H','N','O','F','Cl'].includes(sym))return'gas'; if(['Br','Hg'].includes(sym))return'liquid';return'solid'; }
+  if(slot.type==='element'){
+    const sym=slot.el.sym;
+    if(['H','N','O','F','Cl','He','Ne','Ar','Kr','Xe','Rn'].includes(sym))return'gas';
+    if(['Br','Hg'].includes(sym))return'liquid';
+    return'solid';
+  }
   const c=slot.comp;
   if(c.k==='water'||c.k==='acid'||c.k==='liquid')return'liquid';
   if(c.k==='catalyst')return'solid';
@@ -1755,7 +1813,6 @@ function clearAll(){
   document.getElementById('slot3Container').style.display='none';
   document.getElementById('result').innerHTML='Выберите два реагента и нажмите «Смешать»';
   resetLab(false);
-  // 🔗 ЦЕПОЧКИ: сбрасываем и цепочку тоже
   if (CHAIN_MODE) {
     chainContents = [];
     chainHistory = [];
@@ -1779,11 +1836,14 @@ function slotHTML(s,idx){
 }
 
 function render(){
+  // Показываем 3-й слот, если он заполнен
+  if (SLOTS[2]) {
+    document.getElementById('slot3Container').style.display = 'block';
+  }
   for(let i=0;i<3;i++){ const el=document.getElementById('s'+(i+1)); if(el){el.innerHTML=slotHTML(SLOTS[i],i);el.classList.toggle('filled',!!SLOTS[i]);} }
   document.querySelectorAll('.el').forEach(d=>d.classList.remove('sel'));
   SLOTS.forEach(s=>{if(s&&s.type==='element'){const d=document.querySelector(`.el[data-sym="${s.el.sym}"]`);if(d)d.classList.add('sel');}});
 
-  // 🔗 ЦЕПОЧКИ: рендер чанков
   clearSolidChunks();
   if (CHAIN_MODE) {
     if (chainContents.length > 0 || SLOTS.some(Boolean)) renderSolidChunks();

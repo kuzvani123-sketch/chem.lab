@@ -543,12 +543,26 @@ function oxideAcid(O,acid){
   const den=lcm(lcm(denom(saltU),denom(acidU)),denom(waterU));
   saltU*=den;acidU*=den;waterU*=den;
   if(!isInt(saltU)||!isInt(acidU)||!isInt(waterU))return null;
-  return{success:true, type:'Основный оксид + кислота',env:'aqueous',left:[{c:den,h:O.f},{c:Math.round(acidU),h:acid.f}],right:[{c:Math.round(saltU),h:fHTML(O.cat,acid.an),cat:O.cat,an:acid.an},{c:Math.round(waterU),h:'H<sub>2</sub>O'}], reason:'Оксид металла реагирует с кислотой с образованием соли и воды.'};
+  
+  let rightProducts = productTerms(O.cat, acid.an, Math.round(saltU));
+  rightProducts.push({c:Math.round(waterU),h:'H<sub>2</sub>O',p:'H2O'});
+
+  return{success:true, type:'Основный оксид + кислота',env:'aqueous',
+         left:[{c:den,h:O.f},{c:Math.round(acidU),h:acid.f}],
+         right: rightProducts, 
+         reason:'Оксид металла реагирует с кислотой с образованием соли и воды.'};
 }
 function oxideWater(O){
   if(!O.water||!O.cat)return null;
   const m=CATIONS[O.cat].q;let waterU=O.nOx*m/2;const den=denom(waterU);waterU*=den;
-  return{success:true, type:'Основный оксид + вода',env:'aqueous',left:[{c:den,h:O.f},{c:Math.round(waterU),h:'H<sub>2</sub>O'}],right:[{c:O.nOx*den,h:fHTML(O.cat,'OH')}],exothermic:true, reason:'Активные оксиды металлов реагируют с водой с образованием щелочей.'};
+  
+  let rightProducts = productTerms(O.cat, 'OH', O.nOx*den);
+  
+  return{success:true, type:'Основный оксид + вода',env:'aqueous',
+         left:[{c:den,h:O.f},{c:Math.round(waterU),h:'H<sub>2</sub>O'}],
+         right: rightProducts,
+         exothermic:true, 
+         reason:'Активные оксиды металлов реагируют с водой с образованием щелочей.'};
 }
 function oxideBase(O,base){
   const a=ANIONS[O.an].q,m=CATIONS[base.cat].q,g=gcd(m,a);
@@ -556,12 +570,25 @@ function oxideBase(O,base){
   const den=lcm(lcm(denom(baseU),denom(saltU)),denom(waterU));
   baseU*=den;saltU*=den;waterU*=den;
   if(!isInt(baseU)||!isInt(saltU)||!isInt(waterU))return null;
-  return{success:true, type:'Кислотный оксид + основание',env:'aqueous',left:[{c:den,h:O.f},{c:Math.round(baseU),h:base.f}],right:[{c:Math.round(saltU),h:fHTML(base.cat,O.an),cat:base.cat,an:O.an},{c:Math.round(waterU),h:'H<sub>2</sub>O'}], reason:'Кислотный оксид реагирует со щелочью с образованием соли и воды.'};
+  
+  let rightProducts = productTerms(base.cat, O.an, Math.round(saltU));
+  rightProducts.push({c:Math.round(waterU),h:'H<sub>2</sub>O',p:'H2O'});
+
+  return{success:true, type:'Кислотный оксид + основание',env:'aqueous',
+         left:[{c:den,h:O.f},{c:Math.round(baseU),h:base.f}],
+         right: rightProducts, 
+         reason:'Кислотный оксид реагирует со щелочью с образованием соли и воды.'};
 }
 function acidOxideWater(O){
   if(!O.water||!O.an)return null;
   const a=ANIONS[O.an].q;let waterCount=O.nOx*a/2;const den=denom(waterCount);waterCount*=den;
-  return{success:true, type:'Кислотный оксид + вода',env:'aqueous',left:[{c:den,h:O.f},{c:Math.round(waterCount),h:'H<sub>2</sub>O'}],right:[{c:O.nOx*den,h:fHTML('H',O.an)}], reason:'Кислотный оксид растворяется в воде с образованием кислоты.'};
+  
+  let rightProducts = productTerms('H', O.an, O.nOx*den);
+
+  return{success:true, type:'Кислотный оксид + вода',env:'aqueous',
+         left:[{c:den,h:O.f},{c:Math.round(waterCount),h:'H<sub>2</sub>O'}],
+         right: rightProducts, 
+         reason:'Кислотный оксид растворяется в воде с образованием кислоты.'};
 }
 
 function reactElementAcid(elSym,comp){

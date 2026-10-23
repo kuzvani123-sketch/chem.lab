@@ -5,26 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Виртуальная химическая лаборатория PRO</title>
 <style>
-/* ================= БАЗОВЫЕ СТИЛИ ================= */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
 
 *{box-sizing:border-box}
 body{
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  margin:0;
-  background: #0f1115;
-  color:#e6edf3;
-  font-size:14px;
-  user-select:none;
-  -webkit-user-select:none;
-  -webkit-tap-highlight-color: transparent;
+  margin:0; background: #0f1115; color:#e6edf3; font-size:14px;
+  user-select:none; -webkit-user-select:none; -webkit-tap-highlight-color: transparent;
   overflow-y: scroll;
 }
 .app{max-width:1600px;margin:0 auto;padding:20px;width:100%}
 h1{font-size:22px;font-weight:800;margin:0 0 8px;letter-spacing:-0.5px;display:flex;align-items:center;gap:10px}
 .hint{font-size:13px;color:#8b949e;margin-bottom:16px}
 
-/* ================= ТАБЛИЦА МЕНДЕЛЕЕВА ================= */
 .ptable-container { width: 100%; overflow-x: auto; padding-bottom: 15px; margin-bottom: 10px; -webkit-overflow-scrolling: touch; }
 .glbl{ display:grid;grid-template-columns:repeat(18,minmax(0,1fr));gap:3px; margin-bottom:6px;font-size:10px;opacity:.4;text-align:center;font-weight:600; min-width: 900px; }
 .ptable{ display:grid;grid-template-columns:repeat(18,minmax(0,1fr));gap:3px; min-width: 900px; }
@@ -49,11 +42,9 @@ h1{font-size:22px;font-weight:800;margin:0 0 8px;letter-spacing:-0.5px;display:f
 .lanth-placeholder, .act-placeholder { background: transparent; border: 2px dashed #4a2e3f; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #8b949e; cursor: default; pointer-events: none; }
 .lanth-placeholder:hover, .act-placeholder:hover { transform: none; box-shadow: none; border-color: #4a2e3f; }
 
-/* ================= РАБОЧАЯ ОБЛАСТЬ ================= */
 .workspace{display:grid;grid-template-columns:1fr;gap:20px}
 @media (min-width: 1050px) { .workspace { grid-template-columns:380px 1fr; } }
 
-/* ================= СЛОТЫ РЕАГЕНТОВ ================= */
 .slot{
   background:rgba(22, 27, 34, 0.6);backdrop-filter:blur(10px);
   border:2px dashed #30363d;border-radius:12px;padding:16px;min-height:100px;
@@ -72,7 +63,6 @@ h1{font-size:22px;font-weight:800;margin:0 0 8px;letter-spacing:-0.5px;display:f
 .slot .x{position:absolute;top:12px;right:14px;color:#8b949e;font-size:18px;transition:color 0.2s;font-weight:bold}
 .slot .x:hover{color:#f85149}
 
-/* ================= КНОПКИ ================= */
 button{
   padding:12px;border:0;border-radius:10px;font-weight:600;cursor:pointer;
   margin-top:8px;font-size:14px;font-family:inherit;transition:all 0.2s;
@@ -88,13 +78,22 @@ button:active{transform:scale(0.98);}
 .btn-tool.danger{background:linear-gradient(135deg, #da3633, #f85149);box-shadow:0 4px 15px rgba(218,54,51,0.3)}
 .btn-tool.danger:hover{background:linear-gradient(135deg, #f85149, #ff7b72)}
 
+/* 🔗 ЦЕПОЧКИ — активная кнопка режима */
+#btnChainMode.active{
+  background: linear-gradient(135deg, #8957e5, #a371f7) !important;
+  box-shadow: 0 0 18px rgba(163, 113, 247, 0.5) !important;
+}
+#btnMix.chain-mode{
+  background: linear-gradient(135deg, #8957e5, #a371f7) !important;
+  box-shadow: 0 4px 15px rgba(163, 113, 247, 0.3) !important;
+}
+
 input[type=text]{width:100%;padding:12px;border-radius:10px;background:#0d1117;color:#e6edf3;border:1px solid #30363d;font-size:14px;margin-top:12px;transition:border-color 0.2s;font-family:inherit}
 input[type=text]:focus{outline:none;border-color:#58a6ff;box-shadow:0 0 0 3px rgba(88,166,255,0.2)}
 select{width:100%;padding:12px;border-radius:10px;background:#0d1117;color:#e6edf3;border:1px solid #30363d;font-size:14px;margin-top:8px;max-height:200px;font-family:inherit;cursor:pointer}
 select:focus{outline:none;border-color:#58a6ff}
 .count{font-size:12px;color:#8b949e;margin-top:8px;text-align:center}
 
-/* ================= СЦЕНА ================= */
 .lab-stage{
   position:relative;height:400px;background: #12151c;border:1px solid #30363d;border-radius:16px;overflow:hidden;
   display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
@@ -116,7 +115,6 @@ select:focus{outline:none;border-color:#58a6ff}
 .heat-btn:hover{background:rgba(48,54,61,0.9)}
 .heat-btn.on{background:rgba(122,46,31,0.8);border-color:#f0883e;color:#f0883e;box-shadow:0 0 20px rgba(240,136,62,0.4);text-shadow:0 0 8px rgba(240,136,62,0.5)}
 
-/* ================= БЮРЕТКА ================= */
 .burette-wrap{position:absolute;top:40px;left:50%;transform:translateX(-50%);display:none;flex-direction:column;align-items:center;z-index:5;transition:all 0.3s}
 .burette-wrap.active{display:flex;animation:dropIn 0.4s ease-out}
 @keyframes dropIn{from{transform:translate(-50%, -20px);opacity:0}to{transform:translate(-50%, 0);opacity:1}}
@@ -130,7 +128,6 @@ select:focus{outline:none;border-color:#58a6ff}
 .drop-anim{position:absolute;top:200px;left:50%;transform:translateX(-50%);width:8px;height:12px;background:#58a6ff;border-radius:50%;box-shadow:0 0 10px #58a6ff;animation:dropFall 0.6s cubic-bezier(0.5, 0, 1, 1) forwards}
 @keyframes dropFall{0%{top:200px;opacity:1;transform:translateX(-50%) scaleY(1)}80%{opacity:1;transform:translateX(-50%) scaleY(1.5)}100%{top:380px;opacity:0;transform:translateX(-50%) scaleY(0.5)}}
 
-/* ================= ПОСУДА ================= */
 .vessel-wrap{position:relative;z-index:3;margin-bottom:70px;transition:all 0.5s}
 .beaker{position:relative;width:160px;height:200px;transition:transform .3s}
 .beaker.shaking{animation:shakeBeaker .4s ease-in-out}
@@ -145,7 +142,6 @@ select:focus{outline:none;border-color:#58a6ff}
 .flask-neck{position:absolute;top:-20px;left:50%;transform:translateX(-50%);width:35%;height:25px;border:2px solid rgba(200,220,240,0.3);border-bottom:none;background:transparent}
 .flask-glass::after{content:'';position:absolute;top:0;left:15%;width:8px;bottom:20%;background:linear-gradient(180deg,rgba(255,255,255,0.15),transparent);border-radius:50%;pointer-events:none;z-index:20;clip-path:polygon(0 0, 100% 0, 100% 100%, 0 100%)}
 
-/* ================= ЖИДКОСТЬ И ЭФФЕКТЫ ================= */
 .liquid{position:absolute;bottom:0;left:0;right:0;height:0%;background:linear-gradient(180deg, rgba(100,150,200,0.4), rgba(100,150,200,0.7));transition:background 1s ease, height 0.8s cubic-bezier(0.4, 0, 0.2, 1);z-index:1;}
 .liquid::before{content:'';position:absolute;top:-2px;left:0;right:0;height:6px;background:rgba(255,255,255,0.4);border-radius:50%;filter:blur(1px);animation:surfaceWave 3s ease-in-out infinite;}
 .liquid::after{content:'';position:absolute;top:5px;left:10%;width:80%;height:20px;background:linear-gradient(180deg, rgba(255,255,255,0.2), transparent);border-radius:50%;}
@@ -174,7 +170,6 @@ select:focus{outline:none;border-color:#58a6ff}
 .steam-particle{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.4),transparent 70%);filter:blur(6px);animation:steamRise ease-out forwards}
 @keyframes steamRise{0%{transform:translateY(0) scale(1);opacity:0}20%{opacity:0.7}100%{transform:translateY(-200px) scale(3);opacity:0}}
 
-/* ================= ГОРЕЛКА ================= */
 .burner-wrap{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;z-index:2}
 .flame-glow{position:absolute;bottom:50px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,140,0,0.2),transparent 60%);opacity:0;transition:opacity 0.5s;pointer-events:none;filter:blur(10px)}
 .flame-glow.on{opacity:1}
@@ -187,7 +182,6 @@ select:focus{outline:none;border-color:#58a6ff}
 .burner-base::before{content:'';position:absolute;top:-12px;left:50%;transform:translateX(-50%);width:30px;height:16px;background:linear-gradient(180deg,#555,#222);border-radius:4px 4px 2px 2px;box-shadow:inset 0 -2px 4px rgba(0,0,0,0.6)}
 .burner-base::after{content:'';position:absolute;top:10px;left:50%;transform:translateX(-50%);width:50px;height:8px;background:rgba(0,0,0,0.5);border-radius:50%;filter:blur(4px)}
 
-/* ================= РЕЗУЛЬТАТЫ И ЛОГИ ================= */
 .result{background:rgba(22, 27, 34, 0.8);backdrop-filter:blur(10px);border:1px solid #30363d;border-radius:12px;padding:20px;min-height:120px;box-shadow:0 8px 24px rgba(0,0,0,0.2);}
 .tag{display:inline-block;font-size:11px;padding:4px 10px;border-radius:20px;background:rgba(31,111,235,0.15);color:#58a6ff;border:1px solid rgba(31,111,235,0.3);margin-bottom:12px;font-weight:600;letter-spacing:0.5px}
 .eq{font-size:22px;line-height:1.8;letter-spacing:-0.5px;font-weight:600;word-break:break-word;}
@@ -198,12 +192,55 @@ select:focus{outline:none;border-color:#58a6ff}
 .log-item::before{content:'>';color:#3fb950;margin-right:8px}
 .err{color:#f85149;font-weight:600}
 sub{font-size:.65em;vertical-align:-.25em}
+
+/* 🔗 ЦЕПОЧКИ — статус-бар под сценой */
+.chain-status{
+  background: rgba(22, 27, 34, 0.8);
+  border: 1px solid #30363d;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  min-height: 44px;
+}
+.chain-status .chain-label{
+  color: #8b949e;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 11px;
+}
+.chain-item{
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 13px;
+  background: rgba(88, 166, 255, 0.15);
+  border: 1px solid rgba(88, 166, 255, 0.35);
+  color: #58a6ff;
+}
+.chain-item.element{
+  background: rgba(240, 136, 62, 0.15);
+  border-color: rgba(240, 136, 62, 0.4);
+  color: #f0883e;
+}
+.chain-plus{
+  color: #8b949e;
+  font-size: 12px;
+  font-weight: 600;
+}
 </style>
 </head>
 <body>
 <div class="app">
 <h1>🧪 Виртуальная химическая лаборатория PRO</h1>
-<div class="hint">📱 Термометр теперь работает! Включите горелку, чтобы запустить реакции, требующие нагрева (например, пассивация железа).</div>
+<div class="hint">📱 Термометр теперь работает! Включите горелку, чтобы запустить реакции, требующие нагрева. 🔗 Режим цепочек — собирайте превращения по шагам!</div>
 
 <div class="ptable-container">
   <div class="glbl" id="glbl"></div>
@@ -229,11 +266,13 @@ sub{font-size:.65em;vertical-align:-.25em}
     <select id="combo" onchange="onComboChange(this)"></select>
     <div class="count" id="count"></div>
     
-    <button class="btn-mix" onclick="mix()">Смешать</button>
+    <button class="btn-mix" id="btnMix" onclick="mix()">Смешать</button>
     <button class="btn-clr" onclick="clearAll()">Очистить всё</button>
     
     <div style="margin-top:20px; border-top:1px solid #30363d; padding-top:12px;">
       <div class="lbl" style="color:#8b949e; font-size:11px; margin-bottom:8px; font-weight:600; letter-spacing:1px;">ПРИБОРЫ</div>
+      <button class="btn-tool" id="btnChainMode" onclick="toggleChainMode()">🔗 Режим цепочек</button>
+      <button class="btn-tool danger" id="btnResetChain" onclick="resetChain()" style="display:none;">🗑 Сбросить цепочку</button>
       <button class="btn-tool" onclick="addThirdReagent()">➕ Добавить 3-й реагент</button>
       <button class="btn-tool" id="btnBurette" onclick="toggleBurette()">🧪 Включить бюретку</button>
       <button class="btn-tool" id="btnFlask" onclick="toggleFlask()">⚗️ Коническая колба</button>
@@ -301,6 +340,13 @@ sub{font-size:.65em;vertical-align:-.25em}
         <div class="burner-base"></div>
       </div>
     </div>
+
+    <!-- 🔗 ЦЕПОЧКИ: статус-бар содержимого колбы -->
+    <div class="chain-status" id="beakerStatus" style="display:none;">
+      <span class="chain-label">В колбе:</span>
+      <span id="chainContents"><span style="color:#8b949e; font-style:italic;">пусто — добавьте первый реактив</span></span>
+    </div>
+
     <div class="result" id="result">Выберите реагенты и нажмите «Смешать»</div>
     <div class="log" id="log"></div>
   </div>
@@ -350,8 +396,10 @@ const SALT_SOLID_COLORS={'salt_Cu2_SO4':'60,120,200','salt_Fe2_SO4':'120,180,100
 const PRECIP_COLOR={'AgCl':'белый','AgBr':'светло-жёлтый','AgI':'жёлтый','PbI2':'золотисто-жёлтый','BaSO4':'белый','PbSO4':'белый','CaSO4':'белый','BaSO3':'белый','CaCO3':'белый','BaCO3':'белый','MgCO3':'белый','Ag2CO3':'желтоватый','Cu(OH)2':'голубой','Fe(OH)2':'грязно-зелёный','Fe(OH)3':'бурый','Al(OH)3':'белый студенистый','Mg(OH)2':'белый','Zn(OH)2':'белый','Cr(OH)3':'серо-зелёный','Ni(OH)2':'зелёный','Pb(OH)2':'белый','CuS':'чёрный','PbS':'чёрный','FeS':'чёрный','ZnS':'белый','Ag2S':'чёрный','Ag3PO4':'жёлтый','Ca3(PO4)2':'белый','H2SiO3':'студенистый белый','PbCrO4':'жёлтый','Ag2CrO4':'кирпично-красный','BaCrO4':'жёлтый','Ag2Cr2O7':'оранжево-красный','BaCr2O7':'оранжевый'};
 const FLAME_COLORS={Li:'220,50,50',Na:'255,220,50',K:'180,100,255',Rb:'200,50,50',Cs:'150,50,255',Ca:'255,140,50',Sr:'255,50,50',Ba:'180,255,100',Cu:'50,255,100'};
 
-/* ================= РЯД АКТИВНОСТИ И pH-ИНДИКАТОР ================= */
 const METALS_ACTIVITY = ['Li', 'K', 'Ba', 'Ca', 'Na', 'Mg', 'Al', 'Mn', 'Zn', 'Cr', 'Fe', 'Ni', 'Sn', 'Pb', 'H', 'Cu', 'Hg', 'Ag', 'Pt', 'Au'];
+
+/* 🔗 ЦЕПОЧКИ: набор газов — они улетают из колбы */
+const GAS_PRODUCTS = new Set(['H2','CO2','SO2','NH3','H2S','Cl2','NO2','NO','O2','Br2','N2','F2','I2']);
 
 const PH_COLORS = {
   0: { color: '#ff0000', text: 'Сильнокислая', val: '0.0' },
@@ -364,7 +412,6 @@ const PH_COLORS = {
   14: { color: '#8957e5', text: 'Сильнощелочная', val: '14.0' }
 };
 
-/* ================= МАТЕМАТИКА ================= */
 const gcd=(a,b)=>{a=Math.abs(Math.round(a));b=Math.abs(Math.round(b));while(b){let t=b;b=a%b;a=t;}return a||1;};
 const lcm=(a,b)=>a/gcd(a,b)*b;
 const isInt=x=>Math.abs(x-Math.round(x))<1e-9;
@@ -403,7 +450,6 @@ function solubility(cat,an){
   return alk.includes(cat)?'s':'i';
 }
 
-/* ================= КЛАССИФИКАЦИЯ ================= */
 const GAS={CO2:{h:'CO<sub>2</sub>',p:'CO2',obs:'выделяется газ без цвета и запаха'},SO2:{h:'SO<sub>2</sub>',p:'SO2',obs:'выделяется газ с резким запахом'},H2S:{h:'H<sub>2</sub>S',p:'H2S',obs:'выделяется газ с запахом тухлых яиц'},NH3:{h:'NH<sub>3</sub>',p:'NH3',obs:'выделяется газ с резким запахом (при нагревании)'},H2:{h:'H<sub>2</sub>',p:'H2',obs:'выделяется бесцветный газ'},Cl2:{h:'Cl<sub>2</sub>',p:'Cl2',obs:'выделяется желто-зеленый газ'},NO2:{h:'NO<sub>2</sub>',p:'NO2',obs:'выделяется бурый газ'},NO:{h:'NO',p:'NO',obs:'выделяется бесцветный газ (быстро буреет на воздухе)'},O2:{h:'O<sub>2</sub>',p:'O2',obs:'выделяется бесцветный газ, поддерживающий горение'},Br2:{h:'Br<sub>2</sub>',p:'Br2',obs:'выделяются бурые пары'}};
 function classify(cat,an){
   if(cat==='H'&&an==='OH')return{kind:'water'};
@@ -424,7 +470,6 @@ function classify(cat,an){
   return { kind: 'precip' };
 }
 
-/* ================= БАЛАНС И ГЕНЕРАЦИЯ ================= */
 function balanceExchange(s1,s2){
   const c1=CATIONS[s1.cat].q,a1=ANIONS[s1.an].q,c2=CATIONS[s2.cat].q,a2=ANIONS[s2.an].q;
   const L1=lcm(c1,a1),n1=L1/c1,m1=L1/a1,L2=lcm(c2,a2),n2=L2/c2,m2=L2/a2;
@@ -466,7 +511,6 @@ const DIATOMIC=new Set(['H','N','O','F','Cl','Br','I']);
 const elementFormula=s=>DIATOMIC.has(s)?s+'<sub>2</sub>':s;
 function findMetalCat(sym,val){for(const[id,c]of Object.entries(CATIONS))if((c.el===sym || id===sym) && c.q===val)return id;return null;}
 
-/* ================= РЕАКЦИИ ================= */
 function compParts(R){
   if(R.k==='acid')return{cat:'H',an:R.an,html:R.f,plain:fPlain('H',R.an)};
   if(R.k==='base')return{cat:R.cat,an:'OH',html:R.f,plain:fPlain(R.cat,'OH')};
@@ -500,7 +544,6 @@ function mergeProducts(products) {
 
 function exchange(A,B){
   const s1=compParts(A),s2=compParts(B);if(!s1||!s2)return null;
-  
   const solA = solubility(s1.cat, s1.an);
   const solB = solubility(s2.cat, s2.an);
   if ((solA === 'i' || solB === 'i') && (A.k !== 'acid' && B.k !== 'acid')) {
@@ -508,20 +551,16 @@ function exchange(A,B){
       left: [{c:1, h: s1.html}, {c:1, h: s2.html}], 
       reason: `<b>Реакция не идет.</b> Для реакции обмена между солями или основаниями исходные вещества обязаны быть растворимы в воде. Одно из ваших веществ нерастворимо.` };
   }
-
   const c1=classify(s1.cat,s2.an),c2=classify(s2.cat,s1.an);
-  
   if(c1.kind==='soluble'&&c2.kind==='soluble') {
     return { success: false, type: 'Реакция обмена', 
       left: [{c:1, h: s1.html}, {c:1, h: s2.html}],
       reason: `<b>Реакция не идет.</b> Оба потенциальных продукта (${fHTML(s1.cat, s2.an)} и ${fHTML(s2.cat, s1.an)}) растворимы в воде. В растворе просто плавает смесь ионов.` };
   }
-
   const b=balanceExchange(s1,s2);if(!b)return null;
   const left=[{c:b.x,h:s1.html},{c:b.y,h:s2.html}];
   let right=[...productTerms(s1.cat,s2.an,b.u),...productTerms(s2.cat,s1.an,b.v)].sort((a,z)=>(a.p==='H2O')-(z.p==='H2O'));
   right = mergeProducts(right);
-  
   let reasonsArray = [];
   if (c1.kind === 'precip') reasonsArray.push(`выпадает осадок ${fHTML(s1.cat, s2.an)}`);
   if (c1.kind === 'gas') reasonsArray.push(`выделяется газ ${GAS[c1.gas].h}`);
@@ -529,12 +568,10 @@ function exchange(A,B){
   if (c2.kind === 'precip') reasonsArray.push(`выпадает осадок ${fHTML(s2.cat, s1.an)}`);
   if (c2.kind === 'gas') reasonsArray.push(`выделяется газ ${GAS[c2.gas].h}`);
   if (c2.kind === 'water') reasonsArray.push(`образуется вода`);
-  
   let reasonStr = '';
   if (reasonsArray.length > 0) {
     reasonStr = `<b>Реакция идет</b>, так как в ходе процесса ${reasonsArray.join(' и ')}.`;
   }
-
   return{success:true, type:'Реакция обмена',env:'aqueous',left,right, reason: reasonStr};
 }
 function oxideAcid(O,acid){
@@ -543,10 +580,8 @@ function oxideAcid(O,acid){
   const den=lcm(lcm(denom(saltU),denom(acidU)),denom(waterU));
   saltU*=den;acidU*=den;waterU*=den;
   if(!isInt(saltU)||!isInt(acidU)||!isInt(waterU))return null;
-  
   let rightProducts = productTerms(O.cat, acid.an, Math.round(saltU));
   rightProducts.push({c:Math.round(waterU),h:'H<sub>2</sub>O',p:'H2O'});
-
   return{success:true, type:'Основный оксид + кислота',env:'aqueous',
          left:[{c:den,h:O.f},{c:Math.round(acidU),h:acid.f}],
          right: rightProducts, 
@@ -555,13 +590,10 @@ function oxideAcid(O,acid){
 function oxideWater(O){
   if(!O.water||!O.cat)return null;
   const m=CATIONS[O.cat].q;let waterU=O.nOx*m/2;const den=denom(waterU);waterU*=den;
-  
   let rightProducts = productTerms(O.cat, 'OH', O.nOx*den);
-  
   return{success:true, type:'Основный оксид + вода',env:'aqueous',
          left:[{c:den,h:O.f},{c:Math.round(waterU),h:'H<sub>2</sub>O'}],
-         right: rightProducts,
-         exothermic:true, 
+         right: rightProducts, exothermic:true, 
          reason:'Активные оксиды металлов реагируют с водой с образованием щелочей.'};
 }
 function oxideBase(O,base){
@@ -570,10 +602,8 @@ function oxideBase(O,base){
   const den=lcm(lcm(denom(baseU),denom(saltU)),denom(waterU));
   baseU*=den;saltU*=den;waterU*=den;
   if(!isInt(baseU)||!isInt(saltU)||!isInt(waterU))return null;
-  
   let rightProducts = productTerms(base.cat, O.an, Math.round(saltU));
   rightProducts.push({c:Math.round(waterU),h:'H<sub>2</sub>O',p:'H2O'});
-
   return{success:true, type:'Кислотный оксид + основание',env:'aqueous',
          left:[{c:den,h:O.f},{c:Math.round(baseU),h:base.f}],
          right: rightProducts, 
@@ -582,9 +612,7 @@ function oxideBase(O,base){
 function acidOxideWater(O){
   if(!O.water||!O.an)return null;
   const a=ANIONS[O.an].q;let waterCount=O.nOx*a/2;const den=denom(waterCount);waterCount*=den;
-  
   let rightProducts = productTerms('H', O.an, O.nOx*den);
-
   return{success:true, type:'Кислотный оксид + вода',env:'aqueous',
          left:[{c:den,h:O.f},{c:Math.round(waterCount),h:'H<sub>2</sub>O'}],
          right: rightProducts, 
@@ -610,11 +638,19 @@ function reactElementAcid(elSym,comp){
         if (currentTemperature < 60.0) {
           return {success:false, type:'Пассивация', left:[{c:1,h:elSym},{c:1,h:comp.f}], reason:`<b>Реакция не идет.</b> При обычной температуре (${currentTemperature.toFixed(0)}°C) концентрированная серная кислота пассивирует металл. Включите горелку!`};
         } else {
-           return {success:true, type:'ОВР (при нагревании)', env:'aqueous', left:[{c:1,h:elSym},{c:2,h:comp.f}], right:[{c:1,h:`${elSym}SO<sub>4</sub>`,cat:elSym==='Fe'?'Fe3':'Al',an:'SO4'},{c:1,h:'SO<sub>2</sub>↑',obs:'выделяется газ с резким запахом'},{c:2,h:'H<sub>2</sub>O'}], exothermic:true, reason:`<b>Реакция идет при нагревании.</b> Выделяется сернистый газ.`};
+          const cat = (elSym === 'Fe') ? 'Fe3' : 'Al';
+          return {success:true, type:'ОВР (при нагревании)', env:'aqueous',
+            left:[{c:2,h:elSym},{c:6,h:comp.f}],
+            right:[
+              {c:1,h:fHTML(cat,'SO4'), cat:cat, an:'SO4'},
+              {c:3,h:'SO<sub>2</sub>↑', obs:'выделяется газ с резким запахом'},
+              {c:6,h:'H<sub>2</sub>O'}
+            ],
+            exothermic:true, reason:`<b>Реакция идет при нагревании.</b> Выделяется сернистый газ.`};
         }
       }
       if(elSym==='Cu') return {success:true, type:'ОВР (Cu + H2SO4 конц)', env:'aqueous', left:[{c:1,h:'Cu'},{c:2,h:'H<sub>2</sub>SO<sub>4</sub> (конц)'}], right:[{c:1,h:'CuSO<sub>4</sub>',cat:'Cu2',an:'SO4'},{c:1,h:'SO<sub>2</sub>↑',obs:'выделяется газ с резким запахом'},{c:2,h:'H<sub>2</sub>O'}], exothermic:true, reason:'Серная кислота окисляет медь с выделением SO2.'};
-      return {success:true, type:'ОВР (Металл + H2SO4 конц)', env:'aqueous', left:[{c:1,h:elSym},{c:2,h:comp.f}], right:[{c:1,h:`${elSym}SO<sub>4</sub>`,cat:findMetalCat(elSym,M_VAL[elSym]),an:'SO4'},{c:1,h:'SO<sub>2</sub>↑',obs:'выделяется газ с резким запахом'},{c:2,h:'H<sub>2</sub>O'}], exothermic:true, reason:'Серная кислота окисляет металл с выделением SO2.'};
+      return {success:true, type:'ОВР (Металл + H2SO4 конц)', env:'aqueous', left:[{c:1,h:elSym},{c:2,h:comp.f}], right:[{c:1,h:fHTML(findMetalCat(elSym,M_VAL[elSym]),'SO4'),cat:findMetalCat(elSym,M_VAL[elSym]),an:'SO4'},{c:1,h:'SO<sub>2</sub>↑',obs:'выделяется газ с резким запахом'},{c:2,h:'H<sub>2</sub>O'}], exothermic:true, reason:'Серная кислота окисляет металл с выделением SO2.'};
     }
   }
   if(comp.an==='NO3'){
@@ -654,7 +690,6 @@ function reactMetalNitride(M){
   const z=M_VAL[M.sym];if(!z)return null;
   const cat=findMetalCat(M.sym,z);if(!cat)return null;
   if(!['Li','Mg','Ca','Sr','Ba'].includes(M.sym))return null;
-  
   let mM, mN, pM, formula;
   if (z === 1) {
     mM = 6; mN = 1; pM = 2; formula = `${M.sym}<sub>3</sub>N`;
@@ -667,50 +702,47 @@ function reactMetalNitride(M){
 }
 function reactElementElement(a,b){
   const s1=a.sym,s2=b.sym,set=new Set([s1,s2]),hal=['F','Cl','Br','I'];
-  if(set.has('H')&&set.has('O')&&set.size===2)return{success:true, type:'Водород + кислород (взрыв)',env:'combustion',left:[{c:2,h:'H<sub>2</sub>'},{c:1,h:'O<sub>2</sub>'}],right:[{c:2,h:'H<sub>2</sub>O'}],note:'Гремучий газ! Взрыв.',exothermic:true, reason:'Водород реагирует с кислородом со взрывом с образованием воды.'};
+  if(set.has('H')&&set.has('O')&&set.size===2)return{success:true, type:'Водород + кислород (взрыв)',env:'combustion',left:[{c:2,h:'H<sub>2</sub>'},{c:1,h:'O<sub>2</sub>'}],right:[{c:2,h:'H<sub>2</sub>O',p:'H2O'}],note:'Гремучий газ! Взрыв.',exothermic:true, reason:'Водород реагирует с кислородом со взрывом с образованием воды.'};
   if(set.has('H')&&hal.some(h=>set.has(h))&&set.size===2){
     const H=hal.find(h=>set.has(h));
-    return{success:true, type:'Водород + галоген',env:'combustion',left:[{c:1,h:'H<sub>2</sub>'},{c:1,h:elementFormula(H)}],right:[{c:2,h:fHTML('H',H)}],exothermic:true, reason:'Водород реагирует с галогеном с образованием галогеноводорода.'};
+    return{success:true, type:'Водород + галоген',env:'combustion',left:[{c:1,h:'H<sub>2</sub>'},{c:1,h:elementFormula(H)}],right:[{c:2,h:fHTML('H',H),cat:'H',an:H,p:fPlain('H',H)}],exothermic:true, reason:'Водород реагирует с галогеном с образованием галогеноводорода.'};
   }
   if(E_STD.hasOwnProperty(s1)&&hal.includes(s2))return metalHalide(a,b);
   if(E_STD.hasOwnProperty(s2)&&hal.includes(s1))return metalHalide(b,a);
   if(E_STD.hasOwnProperty(s1)&&s2==='O')return metalOxide(a);
   if(E_STD.hasOwnProperty(s2)&&s1==='O')return metalOxide(b);
-  
   if(E_STD.hasOwnProperty(s1)&&s2==='N')return reactMetalNitride(a);
   if(E_STD.hasOwnProperty(s2)&&s1==='N')return reactMetalNitride(b);
-  
   return null;
 }
 function metalHalide(M,X){
   const z=M_VAL[M.sym];if(!z)return null;
   const cat=findMetalCat(M.sym,z);if(!cat)return null;
-  return{success:true, type:'Металл + галоген (горение)',env:'combustion',left:[{c:2,h:elementFormula(M.sym)},{c:z,h:elementFormula(X.sym)}],right:[{c:2,h:fHTML(cat,X.sym),cat:cat,an:X.sym}],exothermic:true, reason:'Металл реагирует с галогеном с образованием соли.'};
+  return{success:true, type:'Металл + галоген (горение)',env:'combustion',left:[{c:2,h:elementFormula(M.sym)},{c:z,h:elementFormula(X.sym)}],right:[{c:2,h:fHTML(cat,X.sym),cat:cat,an:X.sym,p:fPlain(cat,X.sym)}],exothermic:true, reason:'Металл реагирует с галогеном с образованием соли.'};
 }
 function metalOxide(M){
   const z=M_VAL[M.sym];if(!z)return null;
   const cat=findMetalCat(M.sym,z);if(!cat)return null;
   const q=CATIONS[cat].q,g=gcd(2,q),nM=2/g,nO=q/g;
-  return{success:true, type:'Металл + кислород (горение)',env:'combustion',left:[{c:2*nM,h:elementFormula(M.sym)},{c:nO,h:'O<sub>2</sub>'}],right:[{c:2,h:oxideFormula(cat,nM)}],exothermic:true, reason:'Металл горит в кислороде с образованием оксида.'};
+  const oxideH = oxideFormula(cat,nM);
+  return{success:true, type:'Металл + кислород (горение)',env:'combustion',left:[{c:2*nM,h:elementFormula(M.sym)},{c:nO,h:'O<sub>2</sub>'}],right:[{c:2,h:oxideH,p:oxideH.replace(/<[^>]*>/g,''),cat:cat,nOx:nM,kind:'oxB'}],exothermic:true, reason:'Металл горит в кислороде с образованием оксида.'};
 }
 
 function specialReactions(A, B){
   const idA = A.comp ? A.comp.id : A.el.sym;
   const idB = B.comp ? B.comp.id : B.el.sym;
-  
   if((idA==='special_H2O2'&&idB==='special_MnO2')||(idA==='special_MnO2'&&idB==='special_H2O2')){
-    return {success:true, type:'Каталитическое разложение', env:'aqueous', left:[{c:2,h:'H<sub>2</sub>O<sub>2</sub>'},{c:1,h:'MnO<sub>2</sub>'}], right:[{c:2,h:'H<sub>2</sub>O'},{c:1,h:'O<sub>2</sub>↑',obs:'бурное выделение газа (вспенивание)'}], note:'Катализатор MnO2 ускоряет разложение.', reason:'Диоксид марганца выступает катализатором разложения пероксида водорода.'};
+    return {success:true, type:'Каталитическое разложение', env:'aqueous', left:[{c:2,h:'H<sub>2</sub>O<sub>2</sub>'},{c:1,h:'MnO<sub>2</sub>'}], right:[{c:2,h:'H<sub>2</sub>O',p:'H2O'},{c:1,h:'O<sub>2</sub>↑',obs:'бурное выделение газа (вспенивание)'}], note:'Катализатор MnO2 ускоряет разложение.', reason:'Диоксид марганца выступает катализатором разложения пероксида водорода.'};
   }
   if((idA==='base_Al'&&idB==='base_Na')||(idA==='base_Na'&&idB==='base_Al')){
     return {success:true, type:'Амфотерность', env:'aqueous', left:[{c:1,h:'Al(OH)<sub>3</sub>'},{c:1,h:'NaOH'}], right:[{c:1,h:'Na[Al(OH)<sub>4</sub>]'}], note:'Осадок растворяется в избытке щелочи.', reason:'Гидроксид алюминия амфотерен и растворяется в избытке щелочи с образованием комплексной соли.'};
   }
   if((idA==='salt_Cu2_SO4'&&idB==='base_NH4')||(idA==='base_NH4'&&idB==='salt_Cu2_SO4')){
-    return {success:true, type:'Комплексообразование', env:'aqueous', left:[{c:1,h:'CuSO<sub>4</sub>'},{c:4,h:'NH<sub>3</sub>·H<sub>2</sub>O'}], right:[{c:1,h:'[Cu(NH<sub>3</sub>)<sub>4</sub>]SO<sub>4</sub>'},{c:4,h:'H<sub>2</sub>O'}], note:'Ярко-синий раствор.', reason:'Аммиак образует с ионами меди(II) устойчивый комплекс ярко-синего цвета.'};
+    return {success:true, type:'Комплексообразование', env:'aqueous', left:[{c:1,h:'CuSO<sub>4</sub>'},{c:4,h:'NH<sub>3</sub>·H<sub>2</sub>O'}], right:[{c:1,h:'[Cu(NH<sub>3</sub>)<sub>4</sub>]SO<sub>4</sub>'},{c:4,h:'H<sub>2</sub>O',p:'H2O'}], note:'Ярко-синий раствор.', reason:'Аммиак образует с ионами меди(II) устойчивый комплекс ярко-синего цвета.'};
   }
   return null;
 }
 
-/* ================= ПРИЧИНЫ ОТСУТСТВИЯ РЕАКЦИИ ================= */
 function getReason(S1, S2) {
   if (S1.type === 'element' && S2.type === 'element') {
     const cat1 = EL.find(e => e.sym === S1.el.sym)?.cat;
@@ -720,20 +752,16 @@ function getReason(S1, S2) {
     }
     return "Два металла или неметалла не вступают в химическое взаимодействие между собой при обычных условиях (могут образовать сплав только при плавлении).";
   }
-
   if (S1.type === 'element' && S2.type === 'compound') return getElemCompReason(S1.el, S2.comp);
   if (S1.type === 'compound' && S2.type === 'element') return getElemCompReason(S2.el, S1.comp);
-
   if (S1.type === 'compound' && S2.type === 'compound') {
     const A = S1.comp, B = S2.comp;
-    
     const pA = compParts(A), pB = compParts(B);
     if (pA && pB) {
       if (pA.cat === pB.cat || pA.an === pB.an) {
         return "Вещества содержат одинаковые ионы, поэтому ионный обмен не имеет химического смысла.";
       }
     }
-    
     if (pA && pB) {
       const solA = solubility(pA.cat, pA.an);
       const solB = solubility(pB.cat, pB.an);
@@ -741,13 +769,10 @@ function getReason(S1, S2) {
         return "Для реакции обмена между солями или основаниями исходные вещества обязаны быть растворимы в воде. Одно из ваших веществ нерастворимо.";
       }
     }
-
     return "Реакция обмена не идет, так как все потенциальные продукты растворимы в воде (нет осадка, газа или слабого электролита).";
   }
-  
   return "Данные вещества химически безразличны друг к другу при текущих условиях.";
 }
-
 function getElemCompReason(el, comp) {
   if (METALS_ACTIVITY.includes(el.sym)) {
     const idx1 = METALS_ACTIVITY.indexOf(el.sym);
@@ -786,17 +811,13 @@ function react(S1,S2){
 }
 function elementCompound(el,comp){
   const sym=el.sym;
-  
   if (METALS_ACTIVITY.includes(sym)) {
     if (comp.k === 'acid' || comp.k === 'salt') {
        const cat2 = comp.k === 'acid' ? 'H' : comp.cat;
        if (!cat2) return null;
-       
        const idx1 = METALS_ACTIVITY.indexOf(sym);
        const idx2 = METALS_ACTIVITY.indexOf(cat2);
-       
        const isOxidizingAcid = (comp.an === 'NO3') || (comp.isConc && comp.an === 'SO4');
-       
        if (!isOxidizingAcid && idx2 !== -1 && idx1 >= idx2) {
          let plainExplanation = cat2 === 'H' 
            ? `не может вытеснить водород (H<sub>2</sub>) из кислот, так как находится правее него в ряду активности металлов.` 
@@ -807,7 +828,6 @@ function elementCompound(el,comp){
        }
     }
   }
-
   if(comp.k==='acid'&&E_STD.hasOwnProperty(sym))return reactElementAcid(sym,comp);
   if(comp.k==='water')return reactElementWater(sym);
   if(HAL_E[sym]&&comp.k==='salt')return reactHalogenDisplace(sym,comp);
@@ -824,21 +844,16 @@ function updateThermometer(targetTemp) {
   const tempValEl = document.getElementById('tempVal');
   const steamLayer = document.getElementById('steamLayer');
   if (!tempValEl) return;
-
   if (tempInterval) clearInterval(tempInterval);
-
   tempInterval = setInterval(() => {
     let step = targetTemp > currentTemperature ? 1.0 : -1.0;
-    
     if (Math.abs(currentTemperature - targetTemp) < 1.0) {
       currentTemperature = targetTemp;
       clearInterval(tempInterval);
     } else {
       currentTemperature += step;
     }
-
     tempValEl.textContent = currentTemperature.toFixed(1);
-
     if (currentTemperature >= 80) {
       tempValEl.style.color = '#ff2a2a';
       if (steamLayer) steamLayer.style.display = 'block';
@@ -852,67 +867,61 @@ function updateThermometer(targetTemp) {
   }, 15);
 }
 
+/* 🔗 ЦЕПОЧКИ: логика нагрева в режиме цепочек */
 function toggleHeat(){
   initAudio(); 
   isBurnerOn = !isBurnerOn;
   ANIM.heating = isBurnerOn;
-  
   const btn=document.getElementById('heatBtn'),flame=document.getElementById('flame'),glow=document.getElementById('flameGlow');
   btn.classList.toggle('on',isBurnerOn);
   btn.textContent = isBurnerOn ? '🔥 Горелка вкл' : '🔥 Нагреть';
   flame.classList.toggle('on',isBurnerOn);
   glow.classList.toggle('on',isBurnerOn);
-  
   if (isBurnerOn) {
     updateThermometer(100.0);
   } else {
     updateThermometer(20.0);
   }
-
-  if (SLOTS[0] && SLOTS[1]) {
+  // 🔗 ЦЕПОЧКИ: если режим цепочек — применяем нагрев к содержимому колбы
+  if (CHAIN_MODE) {
+    if (isBurnerOn) heatChainContents();
+  } else if (SLOTS[0] && SLOTS[1]) {
     mix();
   }
 }
 
-/* ================= pH-МЕТР И ОБНОВЛЕНИЕ ВИЗУАЛА ================= */
 function updatePH(products = null) {
   const phMeter = document.getElementById('phMeter');
   const phVal = document.getElementById('phVal');
   const liquidEl = getVesselEl('liquid');
-  
-  if(!SLOTS[0] && !SLOTS[1] && !products) { 
+  if(!SLOTS[0] && !SLOTS[1] && !products && !(CHAIN_MODE && chainContents.length)) { 
     phMeter.style.display='none'; 
     if(liquidEl) liquidEl.style.background = `linear-gradient(180deg, rgba(180,200,220,0.2), rgba(180,200,220,0.5))`;
     return; 
   }
-  
   let ph = 7;
   let isAcid = false, isBase = false;
-  
   const checkSubstance = (s) => {
     if(!s || !s.comp) return;
     if(s.comp.k === 'acid') isAcid = true;
     if(s.comp.k === 'base') isBase = true;
     if(s.comp.id === 'acid_SO4_conc' || s.comp.id === 'acid_NO3_conc' || s.comp.id === 'acid_Cl_conc') ph = 0;
   };
-  
   if (products && products.success !== false) {
     isAcid = products.right.some(p => p.h.includes('H<sub>2</sub>SO<sub>4</sub>') || p.h.includes('HCl') || p.h.includes('HNO<sub>3</sub>') || p.h.includes('H<sub>3</sub>PO<sub>4</sub>'));
     isBase = products.right.some(p => p.h.includes('NaOH') || p.h.includes('KOH') || p.h.includes('Ca(OH)<sub>2</sub>') || p.h.includes('Ba(OH)<sub>2</sub>'));
   } else {
     SLOTS.forEach(checkSubstance);
+    // 🔗 ЦЕПОЧКИ: учитываем содержимое колбы
+    if (CHAIN_MODE) chainContents.forEach(checkSubstance);
   }
-  
   if(isAcid && !isBase) ph = 2;
   if(isBase && !isAcid) ph = 12;
   if(isAcid && isBase) ph = 7;
-  
   phMeter.style.display = 'flex';
   phVal.textContent = ph;
-  
   const data = PH_COLORS[ph] || PH_COLORS[7];
   phVal.style.background = data.color;
-  
   if(ANIM.indicator && liquidEl) {
     if(ANIM.indicator === 'phenolphthalein') {
       if(ph > 8) liquidEl.style.background = `linear-gradient(180deg, rgba(200,0,100,0.5), rgba(200,0,100,0.8))`;
@@ -929,41 +938,33 @@ function updatePH(products = null) {
   }
 }
 
-/* ================= ИСПРАВЛЕННАЯ ЛОГИКА (ОБЩИЙ КОТЕЛ) ================= */
+/* 🔗 ЦЕПОЧКИ: главная точка входа */
 function mix(isRecalc = false) {
+  if (CHAIN_MODE) { chainStep(); return; }
   if (!SLOTS[0] || !SLOTS[1]) {
     showResult('<span class="err">Заполните хотя бы два слота реагентов.</span>');
     return;
   }
-
   if (!isRecalc) resetLab();
 
-  // === БЛОК СЕЛЕКТИВНОГО РАСТВОРЕНИЯ (Два металла + Кислота) ===
+  // === СЕЛЕКТИВНОЕ РАСТВОРЕНИЕ ===
   let elems = SLOTS.filter(s => s && s.type === 'element');
   let acids = SLOTS.filter(s => s && s.type === 'compound' && s.comp.k === 'acid');
-
   if (elems.length === 2 && acids.length === 1) {
     const m1 = elems[0].el;
     const m2 = elems[1].el;
     const acidSlot = acids[0];
     const acid = acidSlot.comp;
-
     const idx1 = METALS_ACTIVITY.indexOf(m1.sym);
     const idx2 = METALS_ACTIVITY.indexOf(m2.sym);
     const idxH = METALS_ACTIVITY.indexOf('H');
-
     if (idx1 !== -1 && idx2 !== -1 && idx1 < idxH && idx2 < idxH) {
       let activeMetal, protectedMetal;
       if (idx1 < idx2) { activeMetal = m1; protectedMetal = m2; }
       else { activeMetal = m2; protectedMetal = m1; }
-
       let res = react({ type: 'element', el: activeMetal }, acidSlot);
-
       if (res && res.success !== false) {
-        res.left.push({ c: '', h: elementFormula(protectedMetal.sym) });
-        res.right.push({ c: '', h: elementFormula(protectedMetal.sym) });
         res.reason = `<b>Реакция идет выборочно!</b> Более активный металл <b>${activeMetal.name} (${activeMetal.sym})</b> реагирует с кислотой. Менее активный <b>${protectedMetal.name} (${protectedMetal.sym})</b> защищен электрохимически (гальваническая пара) и остается нетронутым.`;
-
         playReaction(res, isRecalc);
         const eq = sideHTML(res.left) + ' → ' + sideHTML(res.right);
         let html = `<div class="tag">Металл + Кислота (Селективное растворение)</div><div class="eq">${eq}</div>`;
@@ -976,32 +977,26 @@ function mix(isRecalc = false) {
       }
     }
   }
-  // ===============================================================
 
   let res1 = react(SLOTS[0], SLOTS[1]);
   let beakerContents = [];
-
   if (res1 && res1.success !== false) {
     beakerContents = res1.right.map(prod => convertProdToSlotFormat(prod)).filter(Boolean);
   } else {
     beakerContents = [SLOTS[0], SLOTS[1]];
   }
-
   let res2 = null;
   if (SLOTS[2]) {
     for (let i = 0; i < beakerContents.length; i++) {
       if (!beakerContents[i]) continue;
-      
       let testRes = react(beakerContents[i], SLOTS[2]);
       if (!testRes) testRes = react(SLOTS[2], beakerContents[i]);
-      
       if (testRes && testRes.right && testRes.success !== false) {
         res2 = testRes;
         break;
       }
     }
   }
-
   if ((!res1 || res1.success === false) && !res2) {
     let reason = res1 ? res1.reason : getReason(SLOTS[0], SLOTS[1]);
     const l1 = SLOTS[0].type === 'element' ? SLOTS[0].el.sym : SLOTS[0].comp.f;
@@ -1009,7 +1004,6 @@ function mix(isRecalc = false) {
     showResult(`<div class="tag" style="background:rgba(218,54,51,0.15); color:#f85149; border-color:rgba(218,54,51,0.3);">Реакция не идет</div><div class="eq">${l1} + ${l2} ↛ ❌</div><div class="obs">${reason}</div>`);
     return;
   }
-
   if ((!res1 || res1.success === false) && res2) {
     playReaction(res2, isRecalc);
     const eq2 = sideHTML(res2.left) + ' → ' + sideHTML(res2.right);
@@ -1022,47 +1016,16 @@ function mix(isRecalc = false) {
     log('✓ 3-й реагент: ' + eq2);
     return;
   }
-
   if (ANIM.heating && res1 && res1.right) {
-    let newRight = [];
-    let decomposed = false;
-    res1.right.forEach(prod => {
-      if (prod.p === 'Cu(OH)2') {
-        newRight.push({ c: 1, h: 'CuO', p: 'CuO', obs: 'осадок чернеет' });
-        newRight.push({ c: 1, h: 'H<sub>2</sub>O', p: 'H2O' });
-        decomposed = true;
-      } else if (prod.p === 'Fe(OH)3') {
-        newRight.push({ c: 1, h: 'Fe<sub>2</sub>O<sub>3</sub>', p: 'Fe2O3', obs: 'осадок буреет' });
-        newRight.push({ c: 3, h: 'H<sub>2</sub>O', p: 'H2O' });
-        decomposed = true;
-      } else if (prod.p === 'Al(OH)3') {
-        newRight.push({ c: 1, h: 'Al<sub>2</sub>O<sub>3</sub>', p: 'Al2O3' });
-        newRight.push({ c: 3, h: 'H<sub>2</sub>O', p: 'H2O' });
-        decomposed = true;
-      } else if (prod.p === 'H2SiO3') {
-        newRight.push({ c: 1, h: 'SiO<sub>2</sub>', p: 'SiO2' });
-        newRight.push({ c: 1, h: 'H<sub>2</sub>O', p: 'H2O' });
-        decomposed = true;
-      } else if (prod.p === 'CaCO3') {
-        newRight.push({ c: 1, h: 'CaO', p: 'CaO' });
-        newRight.push({ c: 1, h: 'CO<sub>2</sub>↑', p: 'CO2', obs: 'выделяется газ' });
-        decomposed = true;
-      } else {
-        newRight.push(prod);
-      }
-    });
-    
+    const { newRight, decomposed } = applyHeatingDecomposition(res1.right);
     if (decomposed) {
       res1.right = newRight;
       res1.type = 'Термическое разложение';
       res1.reason = 'При нагревании образовавшийся осадок разлагается.';
     }
   }
-
   playReaction(res1, isRecalc);
-
   let html = '';
-  
   if (res1) {
     const eq1 = sideHTML(res1.left) + ' → ' + sideHTML(res1.right);
     html += `<div class="tag">${res1.type}</div><div class="eq">${eq1}</div>`;
@@ -1071,7 +1034,6 @@ function mix(isRecalc = false) {
     if (res1.reason) html += `<div class="obs" style="color:#58a6ff; margin-top:8px;">${res1.reason}</div>`;
     log('✓ ' + describe(SLOTS[0]) + ' + ' + describe(SLOTS[1]) + ' → ' + res1.type);
   }
-
   if (res2) {
     const eq2 = sideHTML(res2.left) + ' → ' + sideHTML(res2.right);
     html += `<div class="tag" style="margin-top:16px; background:#8957e522; color:#a371f7; border-color:#a371f755;">Реакция с 3-м реагентом</div>`;
@@ -1083,8 +1045,286 @@ function mix(isRecalc = false) {
     html += `<div class="tag" style="margin-top:16px; background:#da363322; color:#f85149; border-color:#da363355;">3-й реагент</div>`;
     html += `<div class="obs">С 3-м реагентом реакции не произошло.</div>`;
   }
-
   showResult(html);
+}
+
+/* 🔗 ЦЕПОЧКИ: разложение при нагревании — общая функция */
+function applyHeatingDecomposition(rightTerms) {
+  let newRight = [];
+  let decomposed = false;
+  rightTerms.forEach(prod => {
+    if (prod.p === 'Cu(OH)2') {
+      newRight.push({ c: 1, h: 'CuO', p: 'CuO', obs: 'осадок чернеет', cat:'Cu2', nOx:1, kind:'oxB' });
+      newRight.push({ c: 1, h: 'H<sub>2</sub>O', p: 'H2O' });
+      decomposed = true;
+    } else if (prod.p === 'Fe(OH)3') {
+      newRight.push({ c: 1, h: 'Fe<sub>2</sub>O<sub>3</sub>', p: 'Fe2O3', obs: 'осадок буреет', cat:'Fe3', nOx:2, kind:'oxB' });
+      newRight.push({ c: 3, h: 'H<sub>2</sub>O', p: 'H2O' });
+      decomposed = true;
+    } else if (prod.p === 'Al(OH)3') {
+      newRight.push({ c: 1, h: 'Al<sub>2</sub>O<sub>3</sub>', p: 'Al2O3', cat:'Al', nOx:2, kind:'oxB' });
+      newRight.push({ c: 3, h: 'H<sub>2</sub>O', p: 'H2O' });
+      decomposed = true;
+    } else if (prod.p === 'H2SiO3') {
+      newRight.push({ c: 1, h: 'SiO<sub>2</sub>', p: 'SiO2' });
+      newRight.push({ c: 1, h: 'H<sub>2</sub>O', p: 'H2O' });
+      decomposed = true;
+    } else if (prod.p === 'CaCO3') {
+      newRight.push({ c: 1, h: 'CaO', p: 'CaO', cat:'Ca', nOx:1, kind:'oxB' });
+      newRight.push({ c: 1, h: 'CO<sub>2</sub>↑', p: 'CO2', obs: 'выделяется газ' });
+      decomposed = true;
+    } else {
+      newRight.push(prod);
+    }
+  });
+  return { newRight, decomposed };
+}
+
+/* 🔗 ЦЕПОЧКИ: разложение содержимого колбы при нагревании */
+function heatChainContents() {
+  if (chainContents.length === 0) return;
+  let changed = false;
+  const newBeaker = [];
+  const decomposedList = [];
+  chainContents.forEach(item => {
+    if (item.type === 'compound') {
+      const c = item.comp;
+      const key = c.k === 'base' ? fPlain(c.cat, 'OH') : (c.k === 'salt' ? fPlain(c.cat, c.an) : null);
+      if (key && ['Cu(OH)2','Fe(OH)3','Al(OH)3','H2SiO3','CaCO3'].includes(key)) {
+        const fakeProduct = { p: key, h: c.f, cat: c.cat, an: c.k === 'base' ? 'OH' : c.an };
+        const { newRight, decomposed } = applyHeatingDecomposition([fakeProduct]);
+        if (decomposed) {
+          newRight.forEach(np => {
+            if (np.p === 'H2O' || GAS_PRODUCTS.has(np.p)) return;
+            const conv = convertProdToSlotFormat(np);
+            if (conv) newBeaker.push(conv);
+          });
+          decomposedList.push(key);
+          changed = true;
+          return;
+        }
+      }
+    }
+    newBeaker.push(item);
+  });
+  if (changed) {
+    chainContents = newBeaker;
+    startSteam(1.5);
+    let color = null;
+    if (newBeaker.some(x => x.type === 'compound' && x.comp.f && x.comp.f.includes('CuO'))) color = '30,30,30';
+    if (newBeaker.some(x => x.type === 'compound' && x.comp.f && x.comp.f.includes('Fe<sub>2'))) color = '150,60,40';
+    if (color) setLiquidColor(color);
+    showResult(`<div class="tag" style="background:#da363322; color:#f85149; border-color:#da363355;">🔥 Термическое разложение цепочки</div><div class="obs">При нагревании разложились: ${decomposedList.join(', ')}</div>`);
+    log('🔗 🔥 Разложение: ' + decomposedList.join(', '));
+    renderChainStatus();
+    renderSolidChunks();
+    setTimeout(stopSteam, 3000);
+  }
+}
+
+/* 🔗 ЦЕПОЧКИ: глобальное состояние */
+let CHAIN_MODE = false;
+let chainContents = [];
+let chainHistory = [];
+
+/* 🔗 ЦЕПОЧКИ: переключение режима */
+function toggleChainMode() {
+  CHAIN_MODE = !CHAIN_MODE;
+  const btn = document.getElementById('btnChainMode');
+  const btnMix = document.getElementById('btnMix');
+  const btnResetChain = document.getElementById('btnResetChain');
+  const statusDiv = document.getElementById('beakerStatus');
+
+  if (CHAIN_MODE) {
+    btn.classList.add('active');
+    btn.textContent = '🔗 Цепочки: ВКЛ';
+    btnMix.textContent = '➕ Добавить в стакан';
+    btnMix.classList.add('chain-mode');
+    btnResetChain.style.display = 'block';
+    statusDiv.style.display = 'flex';
+    chainContents = [];
+    chainHistory = [];
+    renderChainStatus();
+    showResult('<div class="tag" style="background:rgba(163,113,247,0.15); color:#a371f7; border-color:rgba(163,113,247,0.35);">🔗 Режим цепочек включён</div><div class="obs">Выберите первый реагент и нажмите «Добавить в стакан». Затем добавляйте следующие реагенты по одному — продукты предыдущих реакций остаются в колбе. Например: Cu → CuSO₄ → Cu(OH)₂ → CuO.</div>');
+    log('🔗 Режим цепочек: ВКЛ');
+  } else {
+    btn.classList.remove('active');
+    btn.textContent = '🔗 Режим цепочек';
+    btnMix.textContent = 'Смешать';
+    btnMix.classList.remove('chain-mode');
+    btnResetChain.style.display = 'none';
+    statusDiv.style.display = 'none';
+    chainContents = [];
+    chainHistory = [];
+    log('🔗 Режим цепочек: ВЫКЛ');
+  }
+}
+
+/* 🔗 ЦЕПОЧКИ: сброс */
+function resetChain() {
+  chainContents = [];
+  chainHistory = [];
+  resetLab(true);
+  renderChainStatus();
+  renderSolidChunks();
+  document.getElementById('result').innerHTML = '<div class="tag" style="background:rgba(163,113,247,0.15); color:#a371f7; border-color:rgba(163,113,247,0.35);">🔗 Цепочка сброшена</div><div class="obs">Колба пуста. Выберите первый реагент для новой цепочки.</div>';
+  log('🔗 Цепочка сброшена');
+}
+
+/* 🔗 ЦЕПОЧКИ: отрисовка статуса */
+function renderChainStatus() {
+  const container = document.getElementById('chainContents');
+  if (!container) return;
+  if (chainContents.length === 0) {
+    container.innerHTML = '<span style="color:#8b949e; font-style:italic;">пусто — добавьте первый реактив</span>';
+    return;
+  }
+  const parts = chainContents.map(item => {
+    if (item.type === 'element') {
+      return `<span class="chain-item element">${elementFormula(item.el.sym)}</span>`;
+    }
+    return `<span class="chain-item">${item.comp.f}</span>`;
+  });
+  container.innerHTML = parts.join('<span class="chain-plus">+</span>');
+}
+
+/* 🔗 ЦЕПОЧКИ: главный шаг — добавить реагент в колбу */
+function chainStep() {
+  // Ищем первый заполненный слот
+  let slotIndex = -1;
+  let newReagent = null;
+  for (let i = 0; i < SLOTS.length; i++) {
+    if (SLOTS[i]) { slotIndex = i; newReagent = SLOTS[i]; break; }
+  }
+  if (!newReagent) {
+    showResult('<span class="err">Выберите реагент для добавления в стакан.</span>');
+    return;
+  }
+
+  const newName = newReagent.type === 'element'
+    ? newReagent.el.sym
+    : newReagent.comp.f.replace(/<\/?sub>/g, '');
+
+  // === СТАРТ ЦЕПОЧКИ ===
+  if (chainContents.length === 0) {
+    chainContents.push(newReagent);
+    chainHistory.push(newName);
+    setLiquidLevel(50);
+    const color = getReagentColor(newReagent);
+    if (color) setLiquidColor(color);
+    renderSolidChunks();
+    renderChainStatus();
+    updatePH();
+    showResult(`<div class="tag" style="background:rgba(163,113,247,0.15); color:#a371f7; border-color:rgba(163,113,247,0.35);">🔗 Старт цепочки</div><div class="eq">${newReagent.type === 'element' ? elementFormula(newReagent.el.sym) : newReagent.comp.f}</div><div class="obs">Стартовый реагент добавлен в колбу. Теперь добавьте следующий — и посмотрите, что получится.</div>`);
+    log('🔗 Старт: ' + newName);
+    SLOTS[slotIndex] = null;
+    render();
+    return;
+  }
+
+  // === ИЩЕМ РЕАКЦИЮ ===
+  let reaction = null;
+  let reactedIdx = -1;
+  for (let i = 0; i < chainContents.length; i++) {
+    let tr = react(chainContents[i], newReagent);
+    if (!tr) tr = react(newReagent, chainContents[i]);
+    if (tr && tr.success !== false && tr.right) {
+      reaction = tr;
+      reactedIdx = i;
+      break;
+    }
+  }
+
+  if (reaction) {
+    // Термическое разложение при включённой горелке
+    if (ANIM.heating && reaction.right) {
+      const { newRight, decomposed } = applyHeatingDecomposition(reaction.right);
+      if (decomposed) {
+        reaction.right = newRight;
+        reaction.type = reaction.type + ' + термическое разложение';
+        reaction.reason = 'Продукты сразу разложились при нагревании.';
+      }
+    }
+
+    // Удаляем прореагировавшее вещество из колбы
+    chainContents.splice(reactedIdx, 1);
+
+    // Добавляем продукты (кроме газов и воды)
+    const newProducts = reaction.right
+      .filter(p => p && p.p !== 'H2O' && !GAS_PRODUCTS.has(p.p))
+      .map(convertProdToSlotFormat)
+      .filter(Boolean);
+    chainContents.push(...newProducts);
+
+    // Визуализация
+    playReactionChain(reaction);
+
+    // Вывод результата
+    const eq = sideHTML(reaction.left) + ' → ' + sideHTML(reaction.right);
+    let html = `<div class="tag" style="background:rgba(163,113,247,0.15); color:#a371f7; border-color:rgba(163,113,247,0.35);">🔗 Шаг цепочки — ${reaction.type}</div>`;
+    html += `<div class="eq">${eq}</div>`;
+    const obs = reaction.right.filter(t => t.obs).map(t => '• ' + t.obs).join('<br>');
+    if (obs) html += `<div class="obs">${obs}</div>`;
+    if (reaction.reason) html += `<div class="obs" style="color:#58a6ff; margin-top:8px;">${reaction.reason}</div>`;
+    showResult(html);
+    log('🔗 ' + eq);
+    chainHistory.push(eq);
+  } else {
+    // === БЕЗ РЕАКЦИИ ===
+    chainContents.push(newReagent);
+    chainHistory.push(newName);
+    showResult(`<div class="tag" style="background:rgba(218,54,51,0.15); color:#f85149; border-color:rgba(218,54,51,0.35);">Смешивание без реакции</div><div class="eq">${newName} добавлен в колбу</div><div class="obs">Новый реактив не вступил в реакцию ни с одним из веществ в колбе. Теперь там смесь веществ. Попробуйте добавить что-то другое, что может прореагировать с одним из них.</div>`);
+    log('🔗 Без реакции: ' + newName);
+    renderSolidChunks();
+  }
+
+  // Сбрасываем слот
+  SLOTS[slotIndex] = null;
+  render();
+  renderChainStatus();
+  updatePH();
+}
+
+/* 🔗 ЦЕПОЧКИ: анимация реакции в режиме цепочек (без полного сброса) */
+function playReactionChain(res) {
+  initAudio();
+  stopBubbles(); stopFire();
+  const env = res.env || 'aqueous';
+
+  // Жидкость и цвет
+  const level = Math.min(80, chainContents.length * 20 + 20);
+  setLiquidLevel(level);
+
+  // Осадок
+  const precip = res.right.find(t => t.precip);
+  if (precip) {
+    startPrecipitate(PRECIP_RGB[PRECIP_COLOR[precip.p]] || '200,200,200');
+  } else if (env === 'aqueous') {
+    let solColor = null;
+    for (const t of res.right) if (t.cat && ION_RGB[t.cat] && !t.precip) solColor = ION_RGB[t.cat];
+    if (solColor) setLiquidColor(solColor);
+  }
+
+  // Газ
+  const gasTerm = res.right.find(t => t.obs && (t.obs.includes('газ') || t.obs.includes('пары')));
+  if (gasTerm) {
+    const gColor = GAS_COLORS[gasTerm.p] || '255,255,255';
+    startBubbles(gColor, gasTerm.p === 'O2' ? 2.5 : 1.2);
+    setTimeout(stopBubbles, 3000);
+  }
+
+  // Пар при разложении
+  if (res.type && res.type.includes('разложение')) {
+    startSteam(1.5);
+    setTimeout(stopSteam, 3500);
+  }
+
+  // Встряска + чанки
+  flashBeaker();
+  renderSolidChunks();
+
+  // pH
+  updatePH(res);
 }
 
 function convertProdToSlotFormat(prod) {
@@ -1100,9 +1340,16 @@ function convertProdToSlotFormat(prod) {
     return {type: 'element', el: {sym:prod.p, name:prod.p, z: 0}};
   }
 
-  if (prod.p === 'CuO') return {type: 'compound', comp: {k:'oxB', cat:'Cu2', nOx:1, f:'CuO', n:'оксид меди(II)'}};
-  if (prod.p === 'Fe2O3') return {type: 'compound', comp: {k:'oxB', cat:'Fe3', nOx:2, f:'Fe<sub>2</sub>O<sub>3</sub>', n:'оксид железа(III)'}};
-  if (prod.p === 'CaO') return {type: 'compound', comp: {k:'oxB', cat:'Ca', nOx:1, f:'CaO', n:'оксид кальция', water:true}};
+  if (prod.p === 'CuO') return {type: 'compound', comp: {id:'oxB_Cu2', k:'oxB', cat:'Cu2', nOx:1, f:'CuO', n:'оксид меди(II)'}};
+  if (prod.p === 'Fe2O3') return {type: 'compound', comp: {id:'oxB_Fe3', k:'oxB', cat:'Fe3', nOx:2, f:'Fe<sub>2</sub>O<sub>3</sub>', n:'оксид железа(III)'}};
+  if (prod.p === 'CaO') return {type: 'compound', comp: {id:'oxB_Ca', k:'oxB', cat:'Ca', nOx:1, f:'CaO', n:'оксид кальция', water:true}};
+  if (prod.p === 'Al2O3') return {type: 'compound', comp: {id:'oxB_Al', k:'oxB', cat:'Al', nOx:2, f:'Al<sub>2</sub>O<sub>3</sub>', n:'оксид алюминия'}};
+  if (prod.p === 'SiO2') return {type: 'compound', comp: {k:'oxA', an:'SiO3', nOx:1, f:'SiO<sub>2</sub>', n:'оксид кремния(IV)'}};
+
+  // 🔗 ЦЕПОЧКИ: структурированный oxB из реакций горения
+  if (prod.kind === 'oxB' && prod.cat && prod.nOx) {
+    return {type: 'compound', comp: {k:'oxB', cat:prod.cat, nOx:prod.nOx, f:prod.h, n:'оксид ' + CATION_GEN[prod.cat]}};
+  }
   
   if (prod.p === 'Li3N') return {type: 'compound', comp: {k:'salt', cat:'Li', an:'N3', f:'Li<sub>3</sub>N', n:'нитрид лития'}};
   if (prod.p === 'Mg3N2') return {type: 'compound', comp: {k:'salt', cat:'Mg', an:'N3', f:'Mg<sub>3</sub>N<sub>2</sub>', n:'нитрид магния'}};
@@ -1111,13 +1358,15 @@ function convertProdToSlotFormat(prod) {
     let kind = 'salt';
     if (prod.cat === 'H') kind = 'acid';
     if (prod.an === 'OH') kind = 'base';
-    
+    let id = null;
+    if (kind === 'salt') id = 'salt_' + prod.cat + '_' + prod.an;
+    else if (kind === 'base') id = 'base_' + prod.cat;
+    else if (kind === 'acid') id = 'acid_' + prod.an;
     return {
       type: 'compound',
-      comp: { k: kind, cat: prod.cat, an: prod.an, f: prod.h, n: prod.p }
+      comp: { id, k: kind, cat: prod.cat, an: prod.an, f: prod.h, n: prod.p || prod.h.replace(/<[^>]*>/g,'') }
     };
   }
-  
   return null;
 }
 
@@ -1187,6 +1436,29 @@ function spawnFire(color){
 function startFire(color){ stopFire(); ANIM.fire=setInterval(()=>spawnFire(color||'#ffea00'),50); }
 function stopFire(){if(ANIM.fire)clearInterval(ANIM.fire);ANIM.fire=null; ['fireLayerBeaker','fireLayerFlask'].forEach(id=>{const l=document.getElementById(id);if(l)l.innerHTML='';}); }
 
+function spawnSteam(){
+  const layer = document.getElementById('steamLayer');
+  if(!layer) return;
+  const p = document.createElement('div');
+  p.className = 'steam-particle';
+  const size = 20 + Math.random() * 30;
+  p.style.width = p.style.height = size + 'px';
+  p.style.left = (20 + Math.random() * 60) + '%';
+  p.style.animationDuration = (2 + Math.random() * 2) + 's';
+  layer.appendChild(p);
+  setTimeout(() => p.remove(), 4200);
+}
+function startSteam(intensity = 1){
+  stopSteam();
+  ANIM.steam = setInterval(spawnSteam, Math.max(80, 160 / intensity));
+}
+function stopSteam(){
+  if(ANIM.steam) clearInterval(ANIM.steam);
+  ANIM.steam = null;
+  const l = document.getElementById('steamLayer');
+  if(l) l.innerHTML = '';
+}
+
 function spawnPrecipParticle(rgb){
   const layer=getVesselEl('precipLayer');if(!layer)return;
   const p=document.createElement('div');p.className='precip-particle';
@@ -1206,13 +1478,21 @@ function stopPrecipitate(){if(ANIM.precip)clearInterval(ANIM.precip);ANIM.precip
 
 function flashBeaker(){const b=document.getElementById('beaker');b.classList.add('shaking');setTimeout(()=>b.classList.remove('shaking'),520);}
 
+/* 🔗 ЦЕПОЧКИ: в режиме цепочек рендерим содержимое колбы + слоты */
 function renderSolidChunks(){
   ['solidLayer','solidLayerFlask'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});
   const isFlask = document.getElementById('flask').classList.contains('on');
   const layer = document.getElementById(isFlask ? 'solidLayerFlask' : 'solidLayer');
   if(!layer) return;
-  
-  SLOTS.forEach((slot,idx)=>{
+
+  let itemsToRender = [];
+  if (CHAIN_MODE) {
+    itemsToRender = [...chainContents, ...SLOTS.filter(Boolean)];
+  } else {
+    itemsToRender = SLOTS;
+  }
+
+  itemsToRender.forEach((slot,idx)=>{
     if(!slot)return;
     const st=getReagentState(slot);if(st!=='solid'&&st!=='slightly')return;
     const color=getSolidColor(slot);
@@ -1237,12 +1517,22 @@ function dissolveSolidChunks(ownerIdx){
   });});
 }
 function clearSolidChunks(){['solidLayer','solidLayerFlask'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});}
-function resetLab(){
-  stopBubbles();stopFire();stopPrecipitate();clearSolidChunks();
-  setLiquidLevel(0);setLiquidColor(null); ANIM.indicator=null; ANIM.drops=0;
-  document.getElementById('indicatorDisplay').style.display='none';
-  document.getElementById('phMeter').style.display='none';
-  document.getElementById('btnFlameTest').style.display='none';
+
+function resetLab(preserveIndicator = true){
+  stopBubbles(); stopFire(); stopSteam(); stopPrecipitate(); clearSolidChunks();
+  setLiquidLevel(0); setLiquidColor(null); ANIM.drops = 0;
+  if (!preserveIndicator) {
+    ANIM.indicator = null;
+    document.getElementById('indicatorDisplay').style.display = 'none';
+  } else if (ANIM.indicator) {
+    const disp = document.getElementById('indicatorDisplay');
+    disp.style.display = 'block';
+    disp.textContent = ANIM.indicator === 'phenolphthalein'
+      ? 'Индикатор: Фенолфталеин'
+      : 'Индикатор: Лакмус';
+  }
+  document.getElementById('phMeter').style.display = 'none';
+  document.getElementById('btnFlameTest').style.display = 'none';
 }
 
 function runFlameTest() {
@@ -1315,7 +1605,6 @@ function playReaction(res, isDrip) {
     const startColor=getReagentColor(SLOTS[0])||getReagentColor(SLOTS[1]);
     setLiquidColor(startColor);
   }
-  
   updatePH(res);
   renderSolidChunks(); if(!isDrip) flashBeaker();
   setTimeout(()=>{
@@ -1335,7 +1624,6 @@ function playReaction(res, isDrip) {
         setLiquidColor(solColor);
       }
     }
-    
     if(env!=='combustion'){
       [0,1,2].forEach(i=>{
         if(!SLOTS[i])return;
@@ -1405,32 +1693,25 @@ function getSolidColor(slot){
   return'220,220,220';
 }
 
-/* ================= RENDER UI ================= */
 (function renderPT(){
   const glbl=document.getElementById('glbl'); for(let i=1;i<=18;i++){const d=document.createElement('div');d.textContent=i;glbl.appendChild(d);}
   const pt=document.getElementById('ptable');
-  
   const lanthPlaceholder = document.createElement('div');
   lanthPlaceholder.className = 'el lanth-placeholder';
   lanthPlaceholder.style.gridColumn = '3'; lanthPlaceholder.style.gridRow = '6';
   lanthPlaceholder.innerHTML = '<span style="font-size:9px">57-71</span>';
   lanthPlaceholder.title = 'Лантаноиды (см. ряд ниже)'; pt.appendChild(lanthPlaceholder);
-
   const actPlaceholder = document.createElement('div');
   actPlaceholder.className = 'el act-placeholder';
   actPlaceholder.style.gridColumn = '3'; actPlaceholder.style.gridRow = '7';
   actPlaceholder.innerHTML = '<span style="font-size:9px">89-103</span>';
   actPlaceholder.title = 'Актиноиды (см. ряд ниже)'; pt.appendChild(actPlaceholder);
-
   EL.forEach(e=>{
     const d=document.createElement('div');d.className='el c-'+e.cat;
-    
     let col = e.grp;
     let row = e.per;
-    
     if (e.z >= 57 && e.z <= 71) { row = 9; col = e.z - 57 + 4; }
     else if (e.z >= 89 && e.z <= 103) { row = 10; col = e.z - 89 + 4; }
-    
     d.style.gridColumn=col;d.style.gridRow=row;d.dataset.sym=e.sym; d.draggable = true;
     d.ondragstart = (ev) => ev.dataTransfer.setData('text/plain', JSON.stringify({type:'element', el:e}));
     d.innerHTML=`<span class="z">${e.z}</span><span class="sy">${e.sym}</span><span class="nm">${e.name}</span>`;
@@ -1468,7 +1749,21 @@ const SLOTS=[null,null,null];
 function pickElement(e){ const item={type:'element',el:e}; if(!SLOTS[0])SLOTS[0]=item;else if(!SLOTS[1])SLOTS[1]=item;else SLOTS[2]=item; render(); }
 function pickCompound(id){ const c=COMPOUNDS.find(x=>x.id===id);if(!c)return; const item={type:'compound',comp:c}; if(!SLOTS[0])SLOTS[0]=item;else if(!SLOTS[1])SLOTS[1]=item;else SLOTS[2]=item; render(); }
 function clearSlot(i){SLOTS[i]=null; if(i===2) document.getElementById('slot3Container').style.display='none'; render();}
-function clearAll(){SLOTS[0]=SLOTS[1]=SLOTS[2]=null;document.getElementById('slot3Container').style.display='none';document.getElementById('result').innerHTML='Выберите два реагента и нажмите «Смешать»';resetLab();render();}
+
+function clearAll(){
+  SLOTS[0]=SLOTS[1]=SLOTS[2]=null;
+  document.getElementById('slot3Container').style.display='none';
+  document.getElementById('result').innerHTML='Выберите два реагента и нажмите «Смешать»';
+  resetLab(false);
+  // 🔗 ЦЕПОЧКИ: сбрасываем и цепочку тоже
+  if (CHAIN_MODE) {
+    chainContents = [];
+    chainHistory = [];
+    renderChainStatus();
+    renderSolidChunks();
+  }
+  render();
+}
 
 function stateLabel(st){
   if(st==='solid')return{txt:'твёрдое',cls:'solid'};if(st==='liquid')return{txt:'раствор',cls:'liquid'};
@@ -1482,12 +1777,20 @@ function slotHTML(s,idx){
   if(s.type==='element')return `<div class="lbl">Реагент ${idx+1} — элемент</div>${stHTML}<div class="fml">${elementFormula(s.el.sym)}</div><div class="sub">${s.el.name}</div><span class="x">×</span>`;
   return `<div class="lbl">Реагент ${idx+1} — ${LABELS[s.comp.k]||'соединение'}</div>${stHTML}<div class="fml">${s.comp.f}</div><div class="sub">${s.comp.n}</div><span class="x">×</span>`;
 }
+
 function render(){
   for(let i=0;i<3;i++){ const el=document.getElementById('s'+(i+1)); if(el){el.innerHTML=slotHTML(SLOTS[i],i);el.classList.toggle('filled',!!SLOTS[i]);} }
   document.querySelectorAll('.el').forEach(d=>d.classList.remove('sel'));
   SLOTS.forEach(s=>{if(s&&s.type==='element'){const d=document.querySelector(`.el[data-sym="${s.el.sym}"]`);if(d)d.classList.add('sel');}});
-  clearSolidChunks(); if(SLOTS[0]||SLOTS[1]||SLOTS[2])renderSolidChunks();
-  
+
+  // 🔗 ЦЕПОЧКИ: рендер чанков
+  clearSolidChunks();
+  if (CHAIN_MODE) {
+    if (chainContents.length > 0 || SLOTS.some(Boolean)) renderSolidChunks();
+  } else {
+    if(SLOTS[0]||SLOTS[1]||SLOTS[2])renderSolidChunks();
+  }
+
   updatePH();
   const hasFlameMetal = SLOTS.some(s => {
     if(!s) return false;

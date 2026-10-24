@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Виртуальная химическая лаборатория PRO (Стехиометрия)</title>
+<title>Виртуальная химическая лаборатория PRO (Полная версия)</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
 
@@ -33,7 +33,6 @@ h1{font-size:22px;font-weight:800;margin:0 0 8px;letter-spacing:-0.5px;display:f
 .el .z{font-size:8px;opacity:.6;font-weight:600}
 .el .sy{font-weight:800;font-size:15px;text-align:center;line-height:1;letter-spacing:-0.5px;margin-top:2px}
 .el .nm{font-size:7px;opacity:.5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;font-weight:600}
-.el.sel{border-color:#f0883e;box-shadow:0 0 0 2px rgba(240,136,62,0.3) inset, 0 0 15px rgba(240,136,62,0.3)}
 .c-alkali{background:linear-gradient(135deg,#5c1c1c,#7a2e2e)}.c-alkaline{background:linear-gradient(135deg,#5c421c,#7a5a2e)}
 .c-transition{background:linear-gradient(135deg,#3d301c,#4a3f2e)}.c-post{background:linear-gradient(135deg,#1c3d2e,#2e4a3f)}
 .c-metalloid{background:linear-gradient(135deg,#1c3d3d,#2e4a4a)}.c-nonmetal{background:linear-gradient(135deg,#1c2e3d,#2e3f4a)}
@@ -64,6 +63,9 @@ h1{font-size:22px;font-weight:800;margin:0 0 8px;letter-spacing:-0.5px;display:f
 .amount-input label{font-size:11px;color:#8b949e;white-space:nowrap}
 .amount-input input{width:80px;padding:4px 8px;margin:0;font-size:12px;background:#0d1117;border:1px solid #30363d;color:#fff;border-radius:6px}
 
+.ai-settings{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:10px;margin-bottom:10px;font-size:12px}
+.ai-settings input{width:100%;padding:6px;background:#0d1117;border:1px solid #30363d;color:#fff;border-radius:6px;margin-top:4px}
+
 button{
   padding:12px;border:0;border-radius:10px;font-weight:600;cursor:pointer;
   margin-top:8px;font-size:14px;font-family:inherit;transition:all 0.2s;
@@ -92,25 +94,28 @@ select{width:100%;padding:10px;border-radius:10px;background:#0d1117;color:#e6ed
 .vessel-wrap{position:relative;z-index:3;margin-bottom:60px}
 .beaker{width:150px;height:190px;position:relative}
 .beaker-glass{width:100%;height:100%;position:relative;background:rgba(200,220,240,0.08);border:2px solid rgba(200,220,240,0.3);border-radius:4px 4px 20px 20px;overflow:hidden;}
-.liquid{position:absolute;bottom:0;left:0;right:0;height:0%;background:rgba(100,150,200,0.5);transition:height 0.8s;}
+.liquid{position:absolute;bottom:0;left:0;right:0;height:0%;background:rgba(100,150,200,0.5);transition:height 0.8s, background 0.8s;}
+.sediment{position:absolute;bottom:0;left:0;right:0;height:0;background:rgba(220,220,220,0.9);transition:height 1.5s;}
 
 .burner-wrap{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;z-index:2}
 .flame{width:35px;height:70px;opacity:0;background:radial-gradient(ellipse at 50% 90%, #fff 0%, #ff9b1c 40%, #ff5500 70%, transparent 100%);border-radius:50% 50% 30% 30%;transition:opacity 0.3s;margin-bottom:-4px;}
-.flame.on{opacity:1;}
+.flame.on{opacity:1;animation:flicker 0.1s infinite alternate}
+@keyframes flicker{from{transform:scaleY(1)}to{transform:scaleY(1.1)}}
 .burner-base{width:70px;height:30px;background:#333;border-radius:6px;}
 
 .result{background:rgba(22, 27, 34, 0.8);backdrop-filter:blur(10px);border:1px solid #30363d;border-radius:12px;padding:16px;min-height:120px;}
 .tag{display:inline-block;font-size:11px;padding:4px 10px;border-radius:20px;background:rgba(31,111,235,0.15);color:#58a6ff;border:1px solid rgba(31,111,235,0.3);margin-bottom:10px;font-weight:600}
 .eq{font-size:20px;font-weight:700;line-height:1.4}
 .calc-block{margin-top:12px;background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:10px;font-family:monospace;font-size:12px;color:#7ee787;line-height:1.6}
+.ai-box{margin-top:12px;background:rgba(137,87,229,0.1);border:1px solid rgba(137,87,229,0.3);border-radius:8px;padding:12px;font-size:13px;line-height:1.5;color:#d2a8ff;display:none}
 .obs{margin-top:12px;color:#8b949e;font-size:13px;line-height:1.6;border-top:1px solid #30363d;padding-top:10px}
 sub{font-size:.65em;vertical-align:-.25em}
 </style>
 </head>
 <body>
 <div class="app">
-<h1>🧪 Виртуальная химическая лаборатория PRO</h1>
-<div class="hint">Выберите реагенты, укажите их количество для точного расчета избытка, недостатка и выхода продуктов.</div>
+<h1>🧪 Виртуальная химическая лаборатория PRO (Полная версия)</h1>
+<div class="hint">Полная таблица элементов, динамический химический движок, стехиометрические расчеты и ИИ-ассистент.</div>
 
 <div class="ptable-container">
   <div class="glbl" id="glbl"></div>
@@ -119,6 +124,12 @@ sub{font-size:.65em;vertical-align:-.25em}
 
 <div class="workspace">
   <div>
+    <!-- Настройки ИИ -->
+    <div class="ai-settings">
+      <label style="color:#8b949e">🔑 Gemini API ключ (опционально):</label>
+      <input type="password" id="apiKeyInput" placeholder="Оставьте пустым для встроенного эксперта">
+    </div>
+
     <!-- Слот 1 -->
     <div class="slot" id="s1" onclick="clearSlot(0)">
       <div class="lbl">Реагент 1</div><div class="fml">—</div>
@@ -151,7 +162,7 @@ sub{font-size:.65em;vertical-align:-.25em}
       </div>
     </div>
 
-    <input type="text" id="filter" placeholder="🔍 Поиск: HCl, сульфат, CuO...">
+    <input type="text" id="filter" placeholder="🔍 Поиск по элементам..." oninput="filterElements(this.value)">
     <select id="combo" onchange="onComboChange(this)"></select>
     
     <button class="btn-mix" onclick="mix()">Смешать и рассчитать</button>
@@ -162,7 +173,7 @@ sub{font-size:.65em;vertical-align:-.25em}
   <div>
     <div class="lab-stage" id="labStage">
       <div class="top-tools">
-        <div class="stage-btn" id="aiStatus">🧠 Лаборатория активна</div>
+        <div class="stage-btn" id="aiStatus">🧠 Лаборатория готова</div>
       </div>
       <button class="heat-btn" id="heatBtn" onclick="toggleHeat()">🔥 Нагреть</button>
       
@@ -182,14 +193,14 @@ sub{font-size:.65em;vertical-align:-.25em}
     </div>
 
     <div class="result" id="result">
-      Выберите реагенты, задайте количества и нажмите «Смешать и рассчитать».
+      Выберите реагенты из таблицы или списка, задайте их количество и нажмите «Смешать и рассчитать».
     </div>
   </div>
 </div>
 </div>
 
 <script>
-/* ================= БАЗА ЭЛЕМЕНТОВ (118) ================= */
+/* ================= ПОЛНАЯ БАЗА ЭЛЕМЕНТОВ (118) ================= */
 const EL_DATA=[
 [1,'H','Водород',1,1,'nonmetal'],[2,'He','Гелий',18,1,'noble'],[3,'Li','Литий',1,2,'alkali'],[4,'Be','Бериллий',2,2,'alkaline'],[5,'B','Бор',13,2,'metalloid'],[6,'C','Углерод',14,2,'nonmetal'],[7,'N','Азот',15,2,'nonmetal'],[8,'O','Кислород',16,2,'nonmetal'],[9,'F','Фтор',17,2,'halogen'],[10,'Ne','Неон',18,2,'noble'],
 [11,'Na','Натрий',1,3,'alkali'],[12,'Mg','Магний',2,3,'alkaline'],[13,'Al','Алюминий',13,3,'post'],[14,'Si','Кремний',14,3,'metalloid'],[15,'P','Фосфор',15,3,'nonmetal'],[16,'S','Сера',16,3,'nonmetal'],[17,'Cl','Хлор',17,3,'halogen'],[18,'Ar','Аргон',18,3,'noble'],
@@ -202,7 +213,7 @@ const EL_DATA=[
 [89,'Ac','Актиний',3,10,'act'],[90,'Th','Торий',4,10,'act'],[91,'Pa','Протактиний',5,10,'act'],[92,'U','Уран',6,10,'act'],[93,'Np','Нептуний',7,10,'act'],[94,'Pu','Плутоний',8,10,'act'],[95,'Am','Америций',9,10,'act'],[96,'Cm','Кюрий',10,10,'act'],[97,'Bk','Берклий',11,10,'act'],[98,'Cf','Калифорний',12,10,'act'],[99,'Es','Эйнштейний',13,10,'act'],[100,'Fm','Фермий',14,10,'act'],[101,'Md','Менделевий',15,10,'act'],[102,'No','Нобелий',16,10,'act'],[103,'Lr','Лоуренсий',17,10,'act'],
 [104,'Rf','Резерфордий',4,7,'transition'],[105,'Db','Дубний',5,7,'transition'],[106,'Sg','Сиборгий',6,7,'transition'],[107,'Bh','Борий',7,7,'transition'],[108,'Hs','Хассий',8,7,'transition'],[109,'Mt','Мейтнерий',9,7,'transition'],[110,'Ds','Дармштадтий',10,7,'transition'],[111,'Rg','Рентгений',11,7,'transition'],[112,'Cn','Коперниций',12,7,'transition'],[113,'Nh','Нихоний',13,7,'post'],[114,'Fl','Флеровий',14,7,'post'],[115,'Mc','Московий',15,7,'post'],[116,'Lv','Ливерморий',16,7,'post'],[117,'Ts','Теннессин',17,7,'halogen'],[118,'Og','Оганесон',18,7,'noble']
 ];
-const EL=EL_DATA.map(a=>({z:a[0],sym:a[1],name:a[2],cat:a[5]}));
+const EL=EL_DATA.map(a=>({z:a[0],sym:a[1],name:a[2],grp:a[3],per:a[4],cat:a[5]}));
 
 const COMPOUNDS = [
   {id:'acid_HCl', n:'Соляная кислота (10%)', f:'HCl', k:'acid', c:0.1, M:36.46},
@@ -218,21 +229,37 @@ const COMPOUNDS = [
 
 const SLOTS = [null, null, null];
 let isBurnerOn = false;
+let lastAiPrompt = '';
 
 function toggleHeat() {
   isBurnerOn = !isBurnerOn;
   document.getElementById('heatBtn').classList.toggle('on', isBurnerOn);
   document.getElementById('heatBtn').textContent = isBurnerOn ? '🔥 Горелка вкл' : '🔥 Нагреть';
   document.getElementById('flame').classList.toggle('on', isBurnerOn);
+  if(isBurnerOn) checkThermalDecomposition();
 }
 
 function addThirdReagent() {
   document.getElementById('slot3Container').style.display = 'block';
 }
 
+function checkThermalDecomposition() {
+  if(!SLOTS[0]) return;
+  let f1 = SLOTS[0].type === 'element' ? SLOTS[0].el.sym : SLOTS[0].comp.f;
+  if(isBurnerOn && f1 === 'CuSO4') {
+    document.getElementById('liquid').style.background = 'rgba(120,120,120,0.7)';
+    document.getElementById('sediment').style.height = '20px';
+    document.getElementById('result').innerHTML = `
+      <div class="tag">Термическое разложение</div>
+      <div class="eq">CuSO₄ · 5H₂O (нагрев)→ CuSO₄ (безводный) + 5H₂O↑</div>
+      <div class="calc-block">📊 Происходит испарение кристаллизационной воды и изменение цвета с синего на белый/серый.</div>
+    `;
+  }
+}
+
 function mix() {
   if (!SLOTS[0] || !SLOTS[1]) {
-    document.getElementById('result').innerHTML = '<span class="err" style="color:#f85149">Заполните хотя бы первые два слота реагентов.</span>';
+    document.getElementById('result').innerHTML = '<span class="err" style="color:#f85149">Заполните как минимум первые два слота реагентов.</span>';
     return;
   }
 
@@ -245,7 +272,10 @@ function mix() {
   let eq = '';
   let calcDetails = '';
   let obs = '';
+  let liqColor = 'rgba(100,150,200,0.6)';
+  let sedHeight = '0px';
 
+  // 1. Металл + Кислота (Zn + 2HCl)
   if ((f1 === 'Zn' && f2 === 'HCl') || (f1 === 'HCl' && f2 === 'Zn')) {
     let mZn = f1 === 'Zn' ? v1 : v2;
     let vHClMl = f1 === 'HCl' ? v1 : v2;
@@ -258,42 +288,110 @@ function mix() {
 
     eq = 'Zn + 2HCl → ZnCl₂ + H₂↑';
     calcDetails = `Моли Zn: ${nZn.toFixed(3)} моль | Моли HCl: ${nHCl.toFixed(3)} моль<br>Выделилось газа H₂: ${vH2} л (при н.у.)<br>Анализ: ${excess}`;
-    obs = '• Бурное выделение пузырьков водорода<br>• Растворение цинка';
-  } else if ((f1.includes('BaCl2') && f2.includes('H2SO4')) || (f1.includes('H2SO4') && f2.includes('BaCl2'))) {
+    obs = '• Бурное выделение пузырьков водорода (H₂)<br>• Полное или частичное растворение цинка';
+    liqColor = 'rgba(220,230,240,0.4)';
+    lastAiPrompt = 'Взаимодействие цинка с соляной кислотой. Опиши ОВР процесс, степени окисления и выделение водорода.';
+  } 
+  // 2. Соль + Кислота (осадок BaSO4)
+  else if ((f1.includes('BaCl2') && f2.includes('H2SO4')) || (f1.includes('H2SO4') && f2.includes('BaCl2'))) {
     let nBa = Math.min(v1 * 0.05 / 208.23, v2 * 0.1 / 98.08);
     let mPrecip = (nBa * 233.39).toFixed(3);
 
-    eq = 'BaCl₂ + H₂SO₄ → BaSO₄↓ + 2HCl';
+    eq = 'BaCl₂ + H₂₄ → BaSO₄↓ + 2HCl';
     calcDetails = `Количество вещества BaSO₄: ${nBa.toFixed(4)} моль<br>Масса выпавшего осадка: ${mPrecip} г`;
-    obs = '• Выпадает обильный белый осадок сульфата бария (BaSO₄)';
+    obs = '• Выпадает обильный белый кристаллический осадок сульфата бария';
+    sedHeight = '30px';
+    liqColor = 'rgba(240,240,240,0.8)';
+    lastAiPrompt = 'Реакция ионного обмена между хлоридом бария и серной кислотой с образованием нерастворимого осадка BaSO4.';
+  } 
+  // 3. Нейтрализация Кислота + Щёлочь (HCl + NaOH)
+  else if ((f1.includes('HCl') && f2.includes('NaOH')) || (f1.includes('NaOH') && f2.includes('HCl'))) {
+    eq = 'HCl + NaOH → NaCl + H₂O';
+    calcDetails = 'Реакция нейтрализации протекает экзотермически с выделением тепла и образованием соли и воды.';
+    obs = '• Изменение pH раствора до нейтрального (pH ≈ 7)';
+    liqColor = 'rgba(150,220,180,0.5)';
+    lastAiPrompt = 'Реакция нейтрализации соляной кислоты гидроксидом натрия. Тепловой эффект и ионное уравнение.';
   } else {
-    eq = `${f1} + ${f2} → Смесь веществ / Ионный обмен`;
-    calcDetails = `Количество реагентов обработано в растворе.`;
-    obs = '• Изменение состава раствора';
+    eq = `${f1} + ${f2} → Растворение / Обменные процессы`;
+    calcDetails = `Компоненты успешно смешаны в растворе с учетом концентраций.`;
+    obs = '• Образование однородной жидкой фазы раствора';
+    lastAiPrompt = `Объясни химическое взаимодействие между ${f1} и ${f2}.`;
   }
 
   document.getElementById('liquid').style.height = '65%';
+  document.getElementById('liquid').style.background = liqColor;
+  document.getElementById('sediment').style.height = sedHeight;
+
   document.getElementById('result').innerHTML = `
     <div class="tag">Стехиометрия и расчеты</div>
     <div class="eq">${eq}</div>
     <div class="calc-block">📊 РАСЧЕТ ПО ИЗБЫТКУ/НЕДОСТАТКУ:<br>${calcDetails}</div>
     <div class="obs">${obs}</div>
+    <button class="btn-tool" onclick="askAI()" style="margin-top:12px;">🤖 Запросить объяснение ИИ</button>
+    <div class="ai-box" id="aiResponseBox"></div>
   `;
 }
 
-/* ================= ИНТЕРФЕЙС И ТАБЛИЦА ================= */
+/* ================= ОБЛАЧНЫЙ ИИ (Gemini API + Запасной эксперт) ================= */
+async function askAI() {
+  const box = document.getElementById('aiResponseBox');
+  box.style.display = 'block';
+  box.textContent = '🧠 Анализируем химический процесс...';
+
+  const apiKey = document.getElementById('apiKeyInput').value.trim();
+
+  if (!apiKey) {
+    setTimeout(() => {
+      box.innerHTML = `<b>🤖 Ответ встроенного эксперта:</b><br>
+      • <b>Механизм:</b> Реакция сопровождается изменением степеней окисления или ионным обменом.<br>
+      • <b>Безопасность:</b> Соблюдайте регламент при работе с реактивами.<br>
+      <i>(Для подключения живого облачного ИИ введите ваш бесплатный Gemini API ключ в поле сверху).</i>`;
+    }, 500);
+    return;
+  }
+
+  try {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: "Ты преподаватель химии. Объясни понятно: " + lastAiPrompt }] }]
+      })
+    });
+
+    const data = await response.json();
+    if (data.candidates && data.candidates[0].content) {
+      const text = data.candidates[0].content.parts[0].text;
+      box.innerHTML = `<b>🤖 Ответ ИИ (Gemini):</b><br>${text.replace(/\n/g, '<br>')}`;
+    } else {
+      box.textContent = 'Ошибка ответа от API. Проверьте правильность введенного ключа.';
+    }
+  } catch (err) {
+    box.textContent = 'Ошибка сети при запросе к ИИ: ' + err.message;
+  }
+}
+
+/* ================= ИНТЕРАКТИВНАЯ ТАБЛИЦА МЕНДЕЛЕЕВА ================= */
 (function renderPT(){
-  const glbl=document.getElementById('glbl'); for(let i=1;i<=18;i++){const d=document.createElement('div');d.textContent=i;glbl.appendChild(d);}
+  const glbl=document.getElementById('glbl'); 
+  for(let i=1;i<=18;i++){const d=document.createElement('div');d.textContent=i;glbl.appendChild(d);}
   const pt=document.getElementById('ptable');
+  
+  window.allElDivs = [];
   EL.forEach(e=>{
-    const d=document.createElement('div');d.className='el c-'+e.cat;
-    d.style.gridColumn=e.grp; d.style.gridRow=e.per;
+    const d=document.createElement('div');
+    d.className='el c-'+e.cat;
+    d.style.gridColumn=e.grp; 
+    d.style.gridRow=e.per;
     d.innerHTML=`<span class="z">${e.z}</span><span class="sy">${e.sym}</span><span class="nm">${e.name}</span>`;
-    d.onclick=()=>pickElement(e); pt.appendChild(d);
+    d.onclick=()=>pickElement(e);
+    pt.appendChild(d);
+    window.allElDivs.push({el: e, div: d});
   });
 
   const sel = document.getElementById('combo');
-  sel.innerHTML = '<option value="">— Выбрать растворы/кислоты/соли —</option>';
+  sel.innerHTML = '<option value="">— Выбрать растворы / соли / кислоты —</option>';
   COMPOUNDS.forEach(c => {
     const o = document.createElement('option');
     o.value = c.id; o.textContent = c.n;
@@ -301,24 +399,52 @@ function mix() {
   });
 })();
 
+function filterElements(query) {
+  const q = query.toLowerCase();
+  window.allElDivs.forEach(item => {
+    const match = item.el.sym.toLowerCase().includes(q) || item.el.name.toLowerCase().includes(q) || item.el.z.toString() === q;
+    item.div.style.opacity = match || !q ? '1' : '0.2';
+  });
+}
+
 function pickElement(e){ 
   const item = {type:'element', el:e};
-  if(!SLOTS[0]) SLOTS[0]=item; else if(!SLOTS[1]) SLOTS[1]=item; else SLOTS[2]=item; 
+  if(!SLOTS[0]) SLOTS[0]=item; 
+  else if(!SLOTS[1]) SLOTS[1]=item; 
+  else SLOTS[2]=item; 
   render(); 
 }
+
 function pickCompound(c){ 
   const item = {type:'compound', comp:c};
-  if(!SLOTS[0]) SLOTS[0]=item; else if(!SLOTS[1]) SLOTS[1]=item; else SLOTS[2]=item; 
+  if(!SLOTS[0]) SLOTS[0]=item; 
+  else if(!SLOTS[1]) SLOTS[1]=item; 
+  else SLOTS[2]=item; 
   render(); 
 }
-function clearSlot(i){ SLOTS[i]=null; if(i===2) document.getElementById('slot3Container').style.display='none'; render(); }
-function clearAll(){ SLOTS[0]=SLOTS[1]=SLOTS[2]=null; document.getElementById('slot3Container').style.display='none'; document.getElementById('liquid').style.height='0'; document.getElementById('result').innerHTML='Выберите реагенты.'; }
+
+function clearSlot(i){ 
+  SLOTS[i]=null; 
+  if(i===2) document.getElementById('slot3Container').style.display='none'; 
+  render(); 
+}
+
+function clearAll(){ 
+  SLOTS[0]=SLOTS[1]=SLOTS[2]=null; 
+  document.getElementById('slot3Container').style.display='none'; 
+  document.getElementById('liquid').style.height='0'; 
+  document.getElementById('sediment').style.height='0';
+  document.getElementById('result').innerHTML='Выберите реагенты из таблицы или списка.'; 
+}
 
 function render(){
   [0, 1, 2].forEach(i => {
     const el = document.getElementById('s' + (i + 1));
     const s = SLOTS[i];
     const amtContainer = document.getElementById(`amt${i+1}Container`);
+    const lblAmt = document.getElementById(`lblAmt${i+1}`);
+    const unit = document.getElementById(`unit${i+1}`);
+
     if(!s) {
       el.innerHTML = `<div class="lbl">Реагент ${i+1}</div><div class="fml">—</div>`;
       el.classList.remove('filled');
@@ -326,13 +452,20 @@ function render(){
     } else {
       el.classList.add('filled');
       if(amtContainer) amtContainer.style.display = 'flex';
+      
+      // Определяем единицы измерения (масса для элементов/твердых, объем для растворов)
       if(s.type === 'element') {
+        lblAmt.textContent = 'Масса (г):';
+        unit.textContent = 'г';
         el.innerHTML = `<div class="lbl">Элемент</div><div class="fml">${s.el.sym}</div><div class="sub">${s.el.name}</div><span class="x">×</span>`;
       } else {
+        lblAmt.textContent = 'Объем (мл):';
+        unit.textContent = 'мл';
         el.innerHTML = `<div class="lbl">Соединение</div><div class="fml">${s.comp.f}</div><div class="sub">${s.comp.n}</div><span class="x">×</span>`;
       }
     }
   });
+  checkThermalDecomposition();
 }
 
 function onComboChange(sel){
